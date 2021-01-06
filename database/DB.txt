@@ -1,0 +1,13 @@
+3 Database:
+-Persone
+-Post
+-Messaggi
+
+-All'inizio pagina login o accesso guest(con meno opzioni)
+-Versione
+__Mobile: stile insta
+__Desktop: pagina divisa in sezioni
+-Opzionale: gestione # (ricerca query popst stesso genere)
+	    gestione operazioni admin o moderatori
+	    gestione storie
+	    personalizzazione pagina 
