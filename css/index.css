@@ -63,7 +63,7 @@ h2 a{
     float: left;
     margin-left: 20px;
     color: #fff;
-    padding-top: 5px;
+    margin-top: 0.2em;
     font-size: 0.9em;
     text-decoration-line: none;
     letter-spacing: .1em;
@@ -111,7 +111,7 @@ h2 a{
 }*/
 
 h2 a:hover,h2 a:active{
-    color: #aaa;
+    color: #aaa !important;
     cursor: pointer;
     /*transition: 0.5s all;
     animation: none;
@@ -140,9 +140,13 @@ nav ul li a {
     text-decoration-line: none;
 }
 
+nav ul li a:nth-of-type(1){
+    font-size: 1.2em;
+}
+
 nav ul li a:hover{
     cursor: pointer;
-    color: #aaa;
+    color: #aaa !important;
 }
 
 .icon{
