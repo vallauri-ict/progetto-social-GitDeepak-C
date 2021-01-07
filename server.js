@@ -1,6 +1,6 @@
 "use strict";
 
-const DBNAME = "5b_unicorns";
+const DBNAME = "DbProgetto";
 const http = require("http");
 const fs = require("fs");
 const express = require("express");
@@ -11,7 +11,7 @@ const bodyParser = require("body-parser");
 let mongo = require("mongodb");
 let mongoClient = mongo.MongoClient;
 const ObjectId = mongo.ObjectID;
-const CONNECTIONSTRING = "mongodb://127.0.0.1:27017";
+const CONNECTIONSTRING = "mongodb+srv://Deepak:*****@cluster0.908ca.mongodb.net/test";
 const CONNECTIONOPTIONS = { useNewUrlParser: true, useUnifiedTopology: true };
 
 const PORT = 1337;
