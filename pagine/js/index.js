@@ -1,10 +1,11 @@
 "use strict";
 
-const BACKSPACE = 8;
-
 $(document).ready(function (){
-    let _txtRicerca = $("#txtRicerca");
-    let _txtVoci = $("#txtVoci");
-
-    
+    let req = inviaRichiesta("GET", "/api/getPost");
+    req.fail(errore);
+    req.done(function(data){
+        console.log(data);
+        let _post = $("<div>");
+        _post.addClass("post");
+    });    
 });

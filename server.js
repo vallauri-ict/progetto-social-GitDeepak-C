@@ -11,7 +11,7 @@ const bodyParser = require("body-parser");
 let mongo = require("mongodb");
 let mongoClient = mongo.MongoClient;
 const ObjectId = mongo.ObjectID;
-const CONNECTIONSTRING = "mongodb+srv://Deepak:*****@cluster0.908ca.mongodb.net/test";
+const CONNECTIONSTRING = "mongodb+srv://Deepak:Deepak@cluster0.908ca.mongodb.net/test";
 const CONNECTIONOPTIONS = { useNewUrlParser: true, useUnifiedTopology: true };
 
 const PORT = 1337;
@@ -62,33 +62,6 @@ app.use("/", function (req, res, next) {
     next();
 });
 
-//Route per fare in modo che il server risponda a qualunque richiesta anche extra-domain.
-app.use("/", function (req, res, next) {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    next();
-})
-
-/********** Route specifiche **********/
-app.get("/api/getCollections", function (req, res, next) {
-    mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
-        if (err) {
-            res.status(503).send("Errore connessione al DB");
-        }
-        else {
-            let db = client.db(DBNAME);
-            db.listCollections().toArray(function (err, collections) {
-                if (err) {
-                    res.status(500).send("Internal server error");
-                }
-                else {
-                    res.send(collections);
-                }
-                client.close();
-            })
-        }
-    })
-});
-
 let currentCollection;
 let currentId;
 app.use("/", function (req, res, next) {
@@ -98,9 +71,38 @@ app.use("/", function (req, res, next) {
     next();
 });
 
+//Route per fare in modo che il server risponda a qualunque richiesta anche extra-domain.
+app.use("/", function (req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    next();
+})
+
+/********** Route specifiche **********/
+app.get("/api/getPost", function (req, res, next) {
+    mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
+        if (err) {
+            res.status(503).send("Errore connessione al DB");
+        }
+        else {
+            let db = client.db(DBNAME),
+                collection = db.collection("Post");
+            collection.find().toArray(function (err, data)
+            {
+                if (err)
+                {
+                    console.log("Errore esecuzione query: " + err.message);
+                }
+                else
+                {
+                    res.status(200).send(data);
+                }
+                client.close();
+            });
+        }
+    })
+});
 
 /********** Route di gestione degli errori **********/
-
 app.use("/", function (req, res, next) {
     res.status(404);
     if (req.originalUrl.startsWith("/api/")) {
