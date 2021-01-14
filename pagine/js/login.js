@@ -75,7 +75,7 @@
 				errore(jqXHR, test_status, str_error)
 		});
 		request.done(function (data) {
-			window.location.href = "../index.html"
+			window.location.href = "../index.html";
 		});
 	}
 

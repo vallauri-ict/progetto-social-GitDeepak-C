@@ -17,7 +17,7 @@ const CONNECTIONOPTIONS = { useNewUrlParser: true, useUnifiedTopology: true };
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const PORT = 1337;
-const TTL_Token = 120; //espresso in sec 
+const TTL_Token = 500; //espresso in sec 
 const privateKey = fs.readFileSync("pagine/keys/privateKey.pem", "utf8");
 const certificate = fs.readFileSync("pagine/keys/certificate.pem", "utf8");
 const credentials = { "key": privateKey, "cert": certificate }; 
@@ -200,7 +200,7 @@ function createToken(data) {
 
 function writeCookie(res, token) {
     //set() --> metodo di express che consente di impostare una o più intestazioni nella risposta HTTP
-    res.set("Set-Cookie", `token=${token};max-age=${TTL_Token};path=/;httponly=true;secure=true`);
+    res.set("Set-Cookie", `token=${token};max-age=${TTL_Token};path=/;httponly=true`);
 }
 
 /**************************************** API DI RISPOSTA ALLE RICHIESTE (DA FARE IN CODA A TUTTE LE ALTRE) ****************************************/
