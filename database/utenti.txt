@@ -1,9 +1,11 @@
 [{
-	"username": "Alfio.Alfio",
+	"username": "alfio.alfio",
 	"name": "Alfio",
 	"surname": "Alfio",
 	"telefono" : 3333333333,
 	"email": "alfio.alfio@gmail.com",
+	"password": "password",
+	"photoProfile": "",
 	"dataNascita": { "$date": "2000-04-03T00:00:00+01:00"},						
 	"indirizzo": "Via giovanni piumati 52, Bra"
 },
@@ -13,6 +15,8 @@
 	"surname": "Bea",
 	"telefono" : 3333333333,
 	"email": "Beatrice.bea@gmail.com",
+	"password": "password",
+	"photoProfile": "",
 	"dataNascita": { "$date": "2000-12-13T13:35:00+01:00"},
 	"indirizzo": "Via cesare battisti 52, Torino"
 },
@@ -22,6 +26,8 @@
 	"surname": "carletto",
 	"telefono" : 3333333333,
 	"email": "Carlo.carletto@gmail.com",
+	"password": "password",
+	"photoProfile": "",
 	"dataNascita": { "$date": "2004-06-01T00:00:00+01:00"},
 	"indirizzo": "Via giovanni piumati 52, Bra"
 },
@@ -31,6 +37,8 @@
 	"surname": "fea",
 	"telefono" : 3333333333,
 	"email": "Flaminia.fea@gmail.com",
+	"password": "password",
+	"photoProfile": "",
 	"dataNascita": { "$date": "1999-04-16T00:00:00.000+01:00"},
 	"indirizzo": "Via umberto 52, Bra"
 },
@@ -40,6 +48,8 @@
 	"surname": "Pietoso",
 	"telefono" : 3333333333,
 	"email": "Daniela.Pietoso@gmail.com",
+	"password": "password",
+	"photoProfile": "",
 	"dataNascita": { "$date": "2000-07-10T00:00:00Z"},
 	"indirizzo": "Via giovanni piumati 52, Bra"
 },
@@ -49,6 +59,8 @@
 	"surname": "mario",
 	"telefono" : 3333333333,
 	"email": "Eraldo.mario@gmail.com",
+	"password": "password",
+	"photoProfile": "",
 	"dataNascita": { "$date": "2000-02-29T00:00:00+01:00"},
 	"indirizzo": "Via giovanni piumati 52, Bra"
 },
@@ -58,6 +70,8 @@
 	"surname": "lima",
 	"telefono" : 3333333333,
 	"email": "Gustavo.lima@gmail.com",
+	"password": "password",
+	"photoProfile": "",
 	"dataNascita": { "$date": "1999-08-24T00:00:00Z"},
 	"indirizzo": "Via giovanni piumati 52, Bra"
 },
@@ -67,6 +81,8 @@
 	"surname": "alba",
 	"telefono" : 3333333333,
 	"email": "Irma.alba@gmail.com",
+	"password": "password",
+	"photoProfile": "",
 	"dataNascita": { "$date": "1999-06-22T00:00:00+01:00"},
 	"indirizzo": "Via giovanni piumati 52, Alba"
 },
@@ -76,6 +92,8 @@
 	"surname": "Bonucci",
 	"telefono" : 3333333333,
 	"email": "Leonardo.bonucci@gmail.com",
+	"password": "password",
+	"photoProfile": "",
 	"dataNascita": { "$date": "1998-11-13T00:00:00-01:00"},
 	"indirizzo": "Via giovanni piumati 52, Bra"
 },
@@ -85,6 +103,8 @@
 	"surname": "maremma",
 	"telefono" : 3333333333,
 	"email": "Marta.maremma@gmail.com",
+	"password": "password",
+	"photoProfile": "",
 	"dataNascita": { "$date":"1998-05-20T00:00:00Z"},
 	"indirizzo": "Via giovanni piumati 52, Carmagnola"
 },
@@ -94,6 +114,8 @@
 	"surname": "Penoso",
 	"telefono" : 3333333333,
 	"email": "Nicola.penoso@gmail.com",
+	"password": "password",
+	"photoProfile": "",
 	"dataNascita": { "$date": "1998-05-20T00:00:00Z"},
 	"indirizzo": "Via giovanni piumati 52, Cervere"
 },
@@ -103,6 +125,8 @@
 	"surname": "ollare",
 	"telefono" : 3333333333,
 	"email": "Olga.ollare@gmail.com",
+	"password": "password",
+	"photoProfile": "",
 	"dataNascita": { "$date": "2004-05-20T00:00:00+01:00"},
 	"indirizzo": "Via giovanni piumati 52, Alba"
 }]

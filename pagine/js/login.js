@@ -1,9 +1,7 @@
 
 (function ($) {
     "use strict";
-    let _lblErrore = $("#lblError"), 
-        _username = $('[name="username"]').val(),		
-        _password = CryptoJS.MD5($('[name="pass"]').val()).toString();
+    let _lblErrore = $("#lblError");
 
 
     _lblErrore.hide();
@@ -66,8 +64,8 @@
     function controllaLogin() {
         let request = inviaRichiesta("POST", "/api/login",
 				{
-					"username": _username.val(),
-					"password": _password.val()
+					"username": $('[name="username"]').val(),
+					"password": $('[name="pass"]').val()
 				}
 			);
 		request.fail(function (jqXHR, test_status, str_error) {
@@ -77,7 +75,7 @@
 				errore(jqXHR, test_status, str_error)
 		});
 		request.done(function (data) {
-			window.location.href = "index.html"
+			window.location.href = "../index.html"
 		});
 	}
 
