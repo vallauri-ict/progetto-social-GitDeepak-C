@@ -14,7 +14,13 @@ const ObjectId = mongo.ObjectID;
 const CONNECTIONSTRING = "mongodb+srv://Deepak:Deepak@cluster0.908ca.mongodb.net/test";
 const CONNECTIONOPTIONS = { useNewUrlParser: true, useUnifiedTopology: true };
 
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const PORT = 1337;
+const TTL_Token = 120; //espresso in sec 
+const privateKey = fs.readFileSync("pagine/keys/privateKey.pem", "utf8");
+const certificate = fs.readFileSync("pagine/keys/certificate.pem", "utf8");
+const credentials = { "key": privateKey, "cert": certificate }; 
 
 let paginaErrore;
 
@@ -35,6 +41,10 @@ function init() {
         else
             paginaErrore = "<h1>Risorsa non trovata</h1>";
     });
+
+    app.response.log = function (message) {
+        console.log("Errore: " + message);
+    }
 }
 
 //Log della richiesta
@@ -42,6 +52,14 @@ app.use('/', function (req, res, next) {
     //originalUrl contiene la risorsa richiesta
     console.log(">>>>>>>>>> " + req.method + ":" + req.originalUrl);
     next();
+});
+
+app.get("/", function (req, res, next) {
+    controllaToken(req, res, next);
+});
+
+app.get("/index.html", function (req, res, next) {
+    controllaToken(req, res, next);
 });
 
 //Route relativa alle risorse statiche
@@ -62,22 +80,130 @@ app.use("/", function (req, res, next) {
     next();
 });
 
-let currentCollection;
-let currentId;
-app.use("/", function (req, res, next) {
-    let aus = req.originalUrl.split("/");
-    currentCollection = aus[2];
-    currentId = aus[3];
-    next();
-});
-
 //Route per fare in modo che il server risponda a qualunque richiesta anche extra-domain.
 app.use("/", function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     next();
 })
 
-/********** Route specifiche **********/
+/********** Middleware specifico relativo a JWT **********/
+//Per tutte le pagine su cui si vuole fare il controllo del token, si aggiunge un listener di questo tipo
+
+//Questa route deve essere scritta prima del metodo controllaToken()
+app.post('/api/login', function (req, res, next) {
+    mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
+        if (err)
+            res.status(503).send("Errore di connessione al database").log(err.message);
+        else {
+            const db = client.db(DBNAME);
+            const collection = db.collection("Utenti");
+
+            let username = req.body.username;
+            collection.findOne({ "username": username }, function (err, dbUser) {
+                if (err)
+                    res.status(500).send("Internal Error in Query Execution").log(err.message);
+                else {
+                    if (dbUser == null)
+                        res.status(401).send("Username e/o Password non validi");
+                    else {
+                        //req.body.password --> password in chiaro inserita dall'utente
+                        //dbUser.password --> password cifrata contenuta nel DB
+                        //Il metodo compare() cifra req.body.password e la va a confrontare con dbUser.password
+                        bcrypt.compare(req.body.password, dbUser.password, function (err, ok) {
+                            if (err)
+                                res.status(500).send("Internal Error in bcrypt compare").log(err.message);
+                            else {
+                                if (!ok)
+                                    res.status(401).send("Username e/o Password non validi");
+                                else {
+                                    let token = createToken(dbUser);
+                                    writeCookie(res, token);
+                                    res.send({ "ris": "ok" });
+                                }
+                            }
+                        });
+                    }
+                }
+                client.close();
+            })
+        }
+    });
+});
+
+app.post("/api/logout", function (req, res, next) {
+    res.set("Set-Cookie", `token="";max-age=-1;path=/;httponly=true`);
+    res.send({ "ris": "ok" });
+});
+
+//Questa route va messa dopo login e logout, ma prima di controllaToken
+app.use("/api", function (req, res, next) {
+    controllaToken(req, res, next);
+});
+
+function controllaToken(req, res, next) {
+    let token = readCookie(req);
+    if (token == "") {
+        inviaErrore(req, res, 403, "Token mancante");
+    }
+    else {
+        jwt.verify(token, privateKey, function (err, payload) {
+            if (err) {
+                inviaErrore(req, res, 403, "Token scaduto o corrotto");
+            }
+            else {
+                let newToken = createToken(payload);
+                writeCookie(res, newToken);
+                req.payload = payload; //salvo il payload dentro request in modo che le api successive lo possano leggere e ricavare i dati dell'utente loggato
+                next();
+            }
+        });
+    }
+}
+
+function inviaErrore(req, res, cod, errorMessage) {
+    if (req.originalUrl.startsWith("/api/")) {
+        res.status(cod).send(errorMessage).log(err.message);
+    }
+    else {
+        res.sendFile(__dirname + "/pagine/login.html");
+    }
+}
+
+function readCookie(req) {
+    let valoreCookie = "";
+    if (req.headers.cookie) {
+        let cookies = req.headers.cookie.split(';');
+        for (let item of cookies) {
+            item = item.split('='); //item = chiave=valore --> split --> [chiave, valore]
+            if (item[0].includes("token")) {
+                valoreCookie = item[1];
+                break;
+            }
+        }
+    }
+    return valoreCookie;
+}
+
+//data --> record dell'utente
+function createToken(data) {
+    //sign() --> si aspetta come parametro un json con i parametri che si vogliono mettere nel token
+    let json = { //payload
+        "_id": data["_id"],
+        "username": data["username"],
+        "iat": data["iat"] || Math.floor((Date.now() / 1000)),
+        "exp": (Math.floor((Date.now() / 1000)) + TTL_Token)
+    }
+    let token = jwt.sign(json, privateKey);
+    console.log(token);
+    return token;
+}
+
+function writeCookie(res, token) {
+    //set() --> metodo di express che consente di impostare una o più intestazioni nella risposta HTTP
+    res.set("Set-Cookie", `token=${token};max-age=${TTL_Token};path=/;httponly=true;secure=true`);
+}
+
+/**************************************** API DI RISPOSTA ALLE RICHIESTE (DA FARE IN CODA A TUTTE LE ALTRE) ****************************************/
 app.get("/api/getPost", function (req, res, next) {
     mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
         if (err) {
@@ -116,11 +242,5 @@ app.use("/", function (req, res, next) {
 });
 
 app.use(function (err, req, res, next) {
-    if (!err.codice) {
-        console.log(err.stack);
-        err.codice = 500;
-        err.message = "Internal Server Error";
-    }
-    res.status(err.codice);
-    res.send(err.message);
-})
+    console.log(err.stack);
+});
