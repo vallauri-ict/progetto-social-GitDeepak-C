@@ -118,7 +118,7 @@ app.post('/api/login', function (req, res, next) {
                                 else {
                                     let token = createToken(dbUser);
                                     writeCookie(res, token);
-                                    res.send({ "ris": "ok" });
+                                    res.send({ "username": username });
                                 }
                             }
                         });
@@ -178,12 +178,12 @@ app.post('/api/signUp', function (req, res, next) {
                             else{
                                 let token = createToken(dbUser);
                                 writeCookie(res, token);
-                                res.send({ "ris": "ok" });
+                                res.send({ "username": username });
                             }
                         }
+                        client.close();
                     })
                 }
-                client.close();
             });
         }
     });
