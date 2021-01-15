@@ -130,6 +130,65 @@ app.post('/api/login', function (req, res, next) {
     });
 });
 
+app.post('/api/signUp', function (req, res, next) {
+    mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
+        if (err)
+            res.status(503).send("Errore di connessione al database").log(err.message);
+        else {
+            const db = client.db(DBNAME);
+            const collection = db.collection("Utenti");
+            let ts = new Date();
+
+            let username = req.body.username,
+                name = req.body.name,
+                surname = req.body.surname,
+                telefono = 3333333333,
+                email = username + "@gmail.com",
+                password = req.body.password,
+                photo = req.body.imgProfile,
+                dataNascita = new Date(),
+                indirizzo = req.body.address,
+                regex = new RegExp("^\\$2[ayb]\\$.{56}$"),
+                pwd;
+                // se la password corrente non è in formato bcrypt
+                if (!regex.test(password)) {     
+                    pwd = bcrypt.hashSync(password, 10)
+                }
+            collection.insertOne(
+                {   "username": username,
+                    "name": name,
+                    "surname": surname,
+                    "telefono": telefono,
+                    "email": email,
+                    "password": pwd,
+                    "photoProfile": photo,
+                    "dataNascita": dataNascita,
+                    "indirizzo": indirizzo
+                }, function (err, data) {
+                if (err)
+                    res.status(500).send("Internal Error in Query Execution").log(err.message);
+                else {
+                    collection.findOne({"username": username}, function(errore, dbUser){
+                        if(errore)
+                            res.status(500).send("Internal Error in Query Execution").log(errore.message);
+                        else
+                        {
+                            if(dbUser == null)
+                                res.status(401).send("Username non trovato!!");
+                            else{
+                                let token = createToken(dbUser);
+                                writeCookie(res, token);
+                                res.send({ "ris": "ok" });
+                            }
+                        }
+                    })
+                }
+                client.close();
+            });
+        }
+    });
+});
+
 app.post("/api/logout", function (req, res, next) {
     res.set("Set-Cookie", `token="";max-age=-1;path=/;httponly=true`);
     res.send({ "ris": "ok" });

@@ -59,18 +59,30 @@
     }
 
     function inviaRq(){
-        let user = $('[name="username"]').val();
-        let uName = $('[name="nome"]').val();
-        let uSurname = $('[name="surname"]').val();
-		// md5 restituisce una word esadecimale, quindi è obbligatorio .toString()
-		let pass=CryptoJS.MD5($('[name="pass"]').val()).toString();
-		let _richiestaSignUp= inviaRichiesta("POST", "../php/signUp.php", { "username":user, "name": uName, "surname": uSurname, "password":pass });
-		_richiestaSignUp.fail(function(jqXHR, test_status, str_error) {
-				error(jqXHR, test_status, str_error)
-		});
-		_richiestaSignUp.done(function(data) {
-			window.location.href = "../pagine/login.html";
-		});
+        let file = $('#txtFile').prop('files')[0];		
+		if (!file)
+			alert("Selezionare un immagine!!")		
+		else {
+			let request = resize(file)
+            request.catch(function (err) { console.log(err.message)})		
+			request.then(function(base64data){     
+				//console.log(base64data);
+				let req = inviaRichiesta("POST", "/api/signUp", 
+                                        {   
+                                            "username":$('[name="username"]').val(), 
+                                            "name": $('[name="nome"]').val(), 
+                                            "surname": $('[name="surname"]').val(), 
+                                            "password": $('[name="pass"]').val(),
+                                            "address": $('[name="address"]').val(),
+                                            "imgProfile": base64data
+                                        });
+                req.fail(errore);
+                req.done(function(data) {
+                    console.log(data);
+                    window.location.href = "../login.html";
+                });
+            })
+        }				        
     }
 
     function showValidate(input) {
@@ -101,6 +113,55 @@
         }
         
     });
+
+    function resize(file){
+        return new Promise(function(resolve, reject) {
+            const WIDTH = 640;
+            const HEIGHT = 480;
+            let reader = new FileReader();   
+            // legge e restituisce il file in formato base 64
+            reader.readAsDataURL(file)
+            //reader.addEventListener("load", function () {
+            reader.onload = function(){	
+                // $('#imgPreview').prop('src', reader.result); 			 
+                let img = new Image()
+                img.src = reader.result	  						
+                img.onload = function(){
+                    if(img.width<WIDTH && img.height<HEIGHT)
+                        resolve(reader.result);
+                    else{
+                        let canvas = document.createElement("canvas");
+                        if(img.width>img.height){
+                            canvas.width=WIDTH;
+                            canvas.height=img.height*(WIDTH/img.width)
+                        }
+                        else{	
+                            canvas.height=HEIGHT
+                            canvas.width=img.width*(HEIGHT/img.height);
+                        }
+                        let _pica = new pica()						
+                        _pica.resize(img, canvas, {
+                              unsharpAmount: 80,
+                              unsharpRadius: 0.6,
+                              unsharpThreshold: 2
+                        })
+                        .then(function (resizedImage){
+                            _pica.toBlob(resizedImage, 'image/jpeg', 0.90)
+                            .then(function (blob){
+                                var reader = new FileReader();
+                                reader.readAsDataURL(blob); 
+                                reader.onload = function() {
+                                    resolve(reader.result);
+                                }
+                            })
+                            .catch(err => reject(err.message))							
+                        })	
+                        .catch(err => reject(err.message))			
+                    }
+                }		
+            }	
+        })	
+    }
 
 
 })(jQuery);
