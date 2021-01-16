@@ -22,7 +22,8 @@ const privateKey = fs.readFileSync("pagine/keys/privateKey.pem", "utf8");
 const certificate = fs.readFileSync("pagine/keys/certificate.pem", "utf8");
 const credentials = { "key": privateKey, "cert": certificate }; 
 
-let paginaErrore;
+let paginaErrore,
+    username = "";
 
 const server = http.createServer(app);
 server.listen(PORT, function () {
@@ -98,7 +99,7 @@ app.post('/api/login', function (req, res, next) {
             const db = client.db(DBNAME);
             const collection = db.collection("Utenti");
 
-            let username = req.body.username;
+            username = req.body.username;
             collection.findOne({ "username": username }, function (err, dbUser) {
                 if (err)
                     res.status(500).send("Internal Error in Query Execution").log(err.message);
@@ -139,8 +140,8 @@ app.post('/api/signUp', function (req, res, next) {
             const collection = db.collection("Utenti");
             let ts = new Date();
 
-            let username = req.body.username,
-                name = req.body.name,
+            username = req.body.username;
+            let name = req.body.name,
                 surname = req.body.surname,
                 telefono = 3333333333,
                 email = username + "@gmail.com",
@@ -286,6 +287,14 @@ app.get("/api/getPost", function (req, res, next) {
         }
     })
 });
+
+app.get("/api/getUsername", function(req, res, next){
+    let token = readCookie(req);
+    if(token == "")
+        inviaErrore(req, res, 403, "Token mancante");
+    else
+        res.send({"username": username});
+})
 
 /********** Route di gestione degli errori **********/
 app.use("/", function (req, res, next) {
