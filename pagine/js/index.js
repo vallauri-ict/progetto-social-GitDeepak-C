@@ -5,8 +5,17 @@ $(document).ready(function (){
     req.fail(errore);
     req.done(function(data){
         console.log(data);
-        let _post = $("<div>");
-        _post.addClass("post");
+        for(let item of data){
+            let _post = $("<div>"),
+                _postInfo = $('<div>'),
+                _i = $('<i class="fa fa-user"></i>').appendTo(_postInfo),
+                _postImg = $("<div>"),
+                _postIcon = $("<div>");
+            _post.addClass("post").appendTo($("#postWrapper"));
+            _postInfo.addClass("infoUtente").appendTo(_post);
+            _postImg.addClass("imgPost").css("background-image", 'url(' + item["imgPost"] + ')').after(_postInfo);
+            _postIcon.addClass("postIcon").addClass("iconPost").after(_postImg);
+        }
     });
     
     req = inviaRichiesta("GET", "/api/getUsername");
