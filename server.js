@@ -303,14 +303,14 @@ app.get("/api/getUsername", function(req, res, next){
 })
 
 app.post("/api/getUserData", function(req, res, next){
-    let _user = req.body.username;
-    mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
+        mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
         if (err) {
             res.status(503).send("Errore connessione al DB");
         }
         else {
             let db = client.db(DBNAME),
-                collection = db.collection("Utenti");
+                collection = db.collection("Utenti"),
+                _user = req.body.username;
             collection.findOne({"username": _user}, function (err, data)
             {
                 if (err)

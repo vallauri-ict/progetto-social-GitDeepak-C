@@ -115,6 +115,10 @@ section{
     border: 1px solid #333;
 }
 
+#username{
+    margin-left: 6%;
+}
+
 #imgProfile{
     width: 150px;
     height: 150px;
@@ -148,6 +152,10 @@ section{
     height: 20%;
     /*border: 1px solid #fff;*/
     padding: 10px;
+}
+
+#desc{
+    line-height: 0.9em;
 }
 
 #icons{
