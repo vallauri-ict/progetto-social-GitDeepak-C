@@ -149,6 +149,9 @@ app.post('/api/signUp', function (req, res, next) {
                 photo = req.body.imgProfile,
                 dataNascita = new Date(),
                 indirizzo = req.body.address,
+                nFollow = 0,
+                nSeguiti = 0,
+                nPost = 0,
                 regex = new RegExp("^\\$2[ayb]\\$.{56}$"),
                 pwd;
                 // se la password corrente non è in formato bcrypt
@@ -164,7 +167,10 @@ app.post('/api/signUp', function (req, res, next) {
                     "password": pwd,
                     "photoProfile": photo,
                     "dataNascita": dataNascita,
-                    "indirizzo": indirizzo
+                    "indirizzo": indirizzo,
+                    "nFollowers": nFollow,
+                    "nSeguiti": nSeguiti,
+                    "nPost": nPost
                 }, function (err, data) {
                 if (err)
                     res.status(500).send("Internal Error in Query Execution").log(err.message);
