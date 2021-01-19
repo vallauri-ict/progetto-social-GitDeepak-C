@@ -81,7 +81,7 @@ h2 a{
 }
 
 h2 a i{
-    font-size: 1.2em;
+    font-size: 1.4em !important;
     vertical-align: middle;
 }
 
@@ -165,7 +165,7 @@ nav ul li a:hover{
 
 .icon{
     color: #fff;
-    font-size: 1.6em;
+    font-size: 1.6em !important;
 }
 
 .icon:hover{
@@ -221,6 +221,10 @@ section{
     background: no-repeat;
     background-size: cover;
     background-position: center;
+}
+
+.imgPost:hover{
+    zoom: 1;
 }
 
 .iconPost{

@@ -1,7 +1,7 @@
 "use strict";
 
 const DBNAME = "DbProgetto";
-const http = require("http");
+const https = require("https");
 const fs = require("fs");
 const express = require("express");
 const app = express();
@@ -25,7 +25,7 @@ const credentials = { "key": privateKey, "cert": certificate };
 let paginaErrore,
     username = "";
 
-const server = http.createServer(app);
+const server = https.createServer(credentials, app);
 server.listen(PORT, function () {
     console.log("Server in ascolto sulla porta " + PORT);
     init();
@@ -191,7 +191,7 @@ app.post('/api/signUp', function (req, res, next) {
 });
 
 app.post("/api/logout", function (req, res, next) {
-    res.set("Set-Cookie", `token="";max-age=-1;path=/;httponly=true`);
+    res.set("Set-Cookie", `token="";max-age=-1;path=/;httpsonly=true`);
     res.send({ "ris": "ok" });
 });
 
@@ -259,8 +259,8 @@ function createToken(data) {
 }
 
 function writeCookie(res, token) {
-    //set() --> metodo di express che consente di impostare una o più intestazioni nella risposta HTTP
-    res.set("Set-Cookie", `token=${token};max-age=${TTL_Token};path=/;httponly=true`);
+    //set() --> metodo di express che consente di impostare una o più intestazioni nella risposta HTTPs
+    res.set("Set-Cookie", `token=${token};max-age=${TTL_Token};path=/;httpsonly=true;secure=true`);
 }
 
 /**************************************** API DI RISPOSTA ALLE RICHIESTE (DA FARE IN CODA A TUTTE LE ALTRE) ****************************************/
@@ -306,6 +306,34 @@ app.post("/api/getUserData", function(req, res, next){
             let db = client.db(DBNAME),
                 collection = db.collection("Utenti");
             collection.findOne({"username": _user}, function (err, data)
+            {
+                if (err)
+                {
+                    console.log("Errore esecuzione query: " + err.message);
+                }
+                else
+                {
+                    res.status(200).send(data);
+                }
+                client.close();
+            });
+        }
+    })
+})
+
+app.post("/api/like", function(req, res, next){
+    mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
+        if (err) {
+            res.status(503).send("Errore connessione al DB");
+        }
+        else {
+            let db = client.db(DBNAME),
+                collection = db.collection("Post"),
+                user = req.body.username,
+                like = req.body.like,
+                n;
+            like ? (n = 1) : (n = -1)
+            collection.updateOne({"idUtente": user}, {$inc: {"nLike": n}}, function (err, data)
             {
                 if (err)
                 {
