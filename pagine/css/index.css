@@ -187,12 +187,13 @@ section{
 #postWrapper{
     display: flex;
     flex-flow: row wrap;
+    margin-bottom: 6%;
 }
 
 .post{
     background: #222;
     width: 500px;
-    height: 350px;
+    height: 360px;
     margin: 3% 2% 0% 2%;
     box-shadow: 0 0 25px 5px #333333;
     color: #fff;
@@ -203,8 +204,14 @@ section{
 }
 
 .infoUtente{
-    margin: 2% 1%;
+    margin: 0.3em 0.4em 0.5em 0.4em;
     width: 100%;
+    color: #fff;
+}
+
+.infoUtente i{
+    margin-top: 0.3em;
+    margin-right: 0.5em;
 }
 
 .imgPost{
@@ -217,8 +224,17 @@ section{
 }
 
 .iconPost{
-    margin: 1% 2%;
+    margin: 0.3em 0.4em 0.2em 0.4em;
     width: 100%;
+}
+
+.iconPost i{
+    margin: 0 0.2em;
+    font-size: 1.2em;
+}
+
+.iconPost i:hover{
+    cursor: pointer;
 }
 
 /***********FOOTER***********/
