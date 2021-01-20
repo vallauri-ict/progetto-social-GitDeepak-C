@@ -380,6 +380,33 @@ app.post("/api/commenta", function(req, res, next){
     })
 })
 
+app.post("/api/modifyUserData", function(req, res, next){
+    mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
+        if (err) {
+            res.status(503).send("Errore connessione al DB");
+        }
+        else {
+            let db = client.db(DBNAME),
+                collection = db.collection("Utenti"),
+                user = req.body.username,
+                _id = req.body.id,
+                newVal = req.body.nuovoValore;
+            collection.updateOne({"username": user}, {$set: {_id: newVal}}, function (err, data)
+            {
+                if (err)
+                {
+                    console.log("Errore esecuzione query: " + err.message);
+                }
+                else
+                {
+                    res.status(200).send(data);
+                }
+                client.close();
+            });
+        }
+    })
+})
+
 /********** Route di gestione degli errori **********/
 app.use("/", function (req, res, next) {
     res.status(404);

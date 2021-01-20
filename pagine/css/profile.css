@@ -158,6 +158,29 @@ section{
     line-height: 0.9em;
 }
 
+#divBtn{
+    width: 100%;
+    margin-bottom: 0.7em;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+
+#btnModifica{
+    width: 40%;
+    background: #333;
+    color: #eee;
+    border: none;
+    margin: 0 auto;
+    border-radius: 1px;
+    padding: 0.3em;
+}
+
+button:hover{
+    background: #eee;
+    color: #333;
+}
+
 #icons{
     width: 100%;
     display: flex;
