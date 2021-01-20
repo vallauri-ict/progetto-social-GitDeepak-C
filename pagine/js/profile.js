@@ -8,6 +8,7 @@ $(document).ready(function (){
     req.fail(errore);
     req.done(function(data){
         loggedUser = data["username"];
+        console.log(loggedUser);
         let request = inviaRichiesta("POST", "/api/getUserData", {"username": loggedUser});
         request.fail(errore);
         request.done(function(data){
@@ -21,6 +22,14 @@ $(document).ready(function (){
             $("#email").html(data["email"]);
             $("#dataNascita").html(date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear());
             $("#indirizzo").html(data["indirizzo"]);
+            let req = inviaRichiesta("POST", "/api/getUserPost", {"username": loggedUser});
+            req.fail(errore);
+            req.done(function(data){
+                console.log(data);
+                for(let item of data){
+                    $("<div>").addClass("post").css({"background": "url(" + item["imgPost"] + ") no-repeat", "background-size": "cover"}).appendTo($("#userPost"));
+                }
+            })
         })
     });
 

@@ -4,6 +4,7 @@ const DBNAME = "DbProgetto";
 const https = require("https");
 const fs = require("fs");
 const express = require("express");
+const colors = require('colors');
 const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -26,6 +27,7 @@ let paginaErrore,
     username = "";
 
 const server = https.createServer(credentials, app);
+const io = require('socket.io')(server);	
 server.listen(PORT, function () {
     console.log("Server in ascolto sulla porta " + PORT);
     init();
@@ -228,7 +230,7 @@ function controllaToken(req, res, next) {
 
 function inviaErrore(req, res, cod, errorMessage) {
     if (req.originalUrl.startsWith("/api/")) {
-        res.status(cod).send(errorMessage).log(err.message);
+        res.status(cod).send(errorMessage);
     }
     else {
         res.sendFile(__dirname + "/pagine/login.html");
@@ -260,6 +262,7 @@ function createToken(data) {
         "exp": (Math.floor((Date.now() / 1000)) + TTL_Token)
     }
     let token = jwt.sign(json, privateKey);
+    username = data["username"];
     console.log(token);
     return token;
 }
@@ -380,6 +383,31 @@ app.post("/api/commenta", function(req, res, next){
     })
 })
 
+app.post("/api/getUserPost", function(req, res, next){
+    mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
+        if (err) {
+            res.status(503).send("Errore connessione al DB");
+        }
+        else {
+            let db = client.db(DBNAME),
+                collection = db.collection("Post"),
+                user = req.body.username;
+            collection.find({"idUtente": user}).toArray(function (err, data)
+            {
+                if (err)
+                {
+                    console.log("Errore esecuzione query: " + err.message);
+                }
+                else
+                {
+                    res.status(200).send(data);
+                }
+                client.close();
+            });
+        }
+    })
+})
+
 app.post("/api/modifyUserData", function(req, res, next){
     mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
         if (err) {
@@ -389,9 +417,9 @@ app.post("/api/modifyUserData", function(req, res, next){
             let db = client.db(DBNAME),
                 collection = db.collection("Utenti"),
                 user = req.body.username,
-                _id = req.body.id,
+                cell = req.body.id,
                 newVal = req.body.nuovoValore;
-            collection.updateOne({"username": user}, {$set: {_id: newVal}}, function (err, data)
+            collection.updateOne({"username": user}, {$set: {cell: newVal}}, function (err, data)
             {
                 if (err)
                 {
@@ -423,3 +451,5 @@ app.use("/", function (req, res, next) {
 app.use(function (err, req, res, next) {
     console.log(err.stack);
 });
+
+/**********************CHAT*********************************/

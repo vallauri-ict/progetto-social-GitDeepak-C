@@ -176,7 +176,7 @@ section{
     padding: 0.3em;
 }
 
-button:hover{
+#btnModifica:hover{
     background: #eee;
     color: #333;
 }
@@ -211,6 +211,7 @@ button:hover{
 .post{
     width: 250px;
     height: 250px;
+    margin: 0 0.5em;
     border: 1px solid #fff;
 }
 
