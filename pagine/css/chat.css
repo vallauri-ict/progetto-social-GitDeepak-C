@@ -54,7 +54,6 @@ body{
 }
 
 /*********BARRA DI NAVIGAZIONE***************/
-
 header nav{
     padding: 3px 20px 3px 20px;
     background-color: rgba(0,0,0,0.7);
@@ -126,104 +125,6 @@ nav ul li a:hover{
     text-decoration: none;
 }
 
-/*********SECTION************/
-section{
-    width: 100%;
-    margin: 0 auto;
-    margin-top: 10%;
-    margin-bottom: 5%;
-    padding: 10px 30px;
-    background: transparent;
-}
-
-section h3{
-    text-align: center;
-    font-size: 2em;
-    color: #fff;
-}
-
-#sectionUsers{
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: center;
-}
-
-#postWrapper{
-    width: 400px;
-    background: #222;
-    box-shadow: 0 0 25px 5px #333333;
-    color: #fff;
-    padding: 10px 6px;
-    margin: 0.8em;
-    display: flex;
-    flex-flow: row wrap;
-}
-
-#imgProfile{
-    width: 50px;
-    height: 60px;
-    margin-left: 5%;
-    border-radius: 50%;
-}
-
-#imgProfile i{
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-    font-size: 3em !important;
-}
-
-#info{
-    width: 70%;
-    height: 60px;
-    margin-left: 0.9em;
-    /*border: 1px solid #fff;*/
-    text-align: center;
-    line-height: 0.7em;
-    border-bottom: 1px solid #fff;
-}
-
-#divUsername{
-    width: 100%;
-} 
-
-#username{
-    width: 100%;
-    text-align: center;
-    margin-top: 0.5em;
-}
-
-#info label{
-    margin-left: 0.9em;
-}
-
-#desc{
-    width: 100%;
-    /*border: 1px solid #fff;*/
-    font-size: 0.9em;
-    line-height: 0.9em;
-    display: flex;
-    flex-flow: row wrap;
-}
-
-#desc p{
-    width: 50%;
-    text-align: center;
-}
-
-@media (max-width: 700px){
-    #info{
-        width: 52%;
-    }
-}
-
-@media (min-width: 1440px) and (max-width: 2200px){  
-    section{
-        margin-top: 5%;
-        margin-bottom: 5%;
-    }
-}
-
 .icon{
     color: #fff;
     font-size: 1.6em !important;
@@ -232,6 +133,67 @@ section h3{
 .icon:hover{
     cursor: pointer;
     color: #aaa;
+}
+
+h1{
+	text-align:center;
+	margin-bottom: 0.5em;
+}
+
+#wrapper {
+    height:80%;
+	overflow:auto;				
+	margin: 12px;
+	padding: 8px;
+	background: #333;
+	border-radius: 0.5em;			
+}	
+
+.container{
+	margin-top: 20%;
+}
+
+@media (min-width: 1440px) and (max-width: 2200px){  
+    .container{
+		margin-top: 5%;
+	}
+}
+
+/* queste classi sono usate dalla funzione visualizza() */
+.message-container {
+	margin: 12px 0;
+	padding: 8px;
+	background-color: #f1eeee;
+}
+
+.message-data {
+	font-weight: bold;
+}
+
+.message-from {
+	font-style: italic;
+}			
+
+#txtMessage{
+	background: none;
+	border: none;
+	border-radius: 0%;
+	border-bottom: 0.1em solid #eee;
+}
+
+.row{
+	margin: 0;
+}
+
+.btn-primary{
+	background: #333;
+	width: 150px;
+	border-color: #83ba43;
+}
+
+.btn-primary:hover, .btn-primary:active, .btn-primary:focus{
+	background: #83ba43;
+	color: #333;
 }
 
 /***********FOOTER***********/
