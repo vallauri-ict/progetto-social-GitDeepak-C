@@ -419,18 +419,45 @@ app.post("/api/modifyUserData", function(req, res, next){
                 user = req.body.username,
                 cell = req.body.id,
                 newVal = req.body.nuovoValore;
-            collection.updateOne({"username": user}, {$set: {cell: newVal}}, function (err, data)
-            {
-                if (err)
-                {
-                    console.log("Errore esecuzione query: " + err.message);
-                }
-                else
-                {
-                    res.status(200).send(data);
-                }
-                client.close();
-            });
+            switch(cell){
+                case "username":
+                    collection.updateOne({"username": user}, {$set: {"username": newVal}}, function (err, data){
+                        if (err)
+                            console.log("Errore esecuzione query: " + err.message);
+                        else
+                            res.status(200).send(data);
+                        client.close();
+                    });
+                    break;
+                case "email":
+                    collection.updateOne({"username": user}, {$set: {"email": newVal}}, function (err, data){
+                        if (err)
+                            console.log("Errore esecuzione query: " + err.message);
+                        else
+                            res.status(200).send(data);
+                        client.close();
+                    });
+                    break;
+                case "dataNascita":
+                    collection.updateOne({"username": user}, {$set: {"dataNascita": newVal}}, function (err, data){
+                        if (err)
+                            console.log("Errore esecuzione query: " + err.message);
+                        else
+                            res.status(200).send(data);
+                        client.close();
+                    });
+                    break;
+                case "indirizzo":
+                    collection.updateOne({"username": user}, {$set: {"indirizzo": newVal}}, function (err, data){
+                        if (err)
+                            console.log("Errore esecuzione query: " + err.message);
+                        else
+                            res.status(200).send(data);
+                        client.close();
+                    });
+                    break;
+            }
+            
         }
     })
 })

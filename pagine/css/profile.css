@@ -242,10 +242,14 @@ section{
 @media (min-width: 1440px) and (max-width: 2200px){  
     footer{
         position: absolute;
-        bottom: 0;
+        bottom: -2em;
         left: 0;
         width: 100%;
         margin-bottom: 0;
+    }
+
+    #postWrapper{
+        margin-bottom: 8%;
     }
 
     footer div{
