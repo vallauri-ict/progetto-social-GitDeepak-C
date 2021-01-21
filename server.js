@@ -26,7 +26,9 @@ const credentials = { "key": privateKey, "cert": certificate };
 
 let paginaErrore,
     username = "",
-    users = [];
+    users = [],
+    oldMessages = [],
+    newMessages = [];
 
 const server = https.createServer(credentials, app);
 const io = require('socket.io')(server);	
@@ -40,7 +42,33 @@ server.listen(PORT, function () {
 		user.socket=socket;		
 		user.socketId=socket.id;		
 		users.push(user);		
-		log(' User ' + colors.yellow(socket.id) + ' connected!');
+        log(' User ' + colors.yellow(socket.id) + ' connected!');
+        mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
+            if (!err) {
+                let db = client.db(DBNAME),
+                    collection = db.collection("Messaggi");
+                collection.find().toArray(function (err, data)
+                {
+                    if (err)
+                    {
+                        console.log("Errore esecuzione query: " + err.message);
+                    }
+                    else
+                    {
+                        oldMessages = data;
+                        for(let item of oldMessages){
+                            let m =  JSON.stringify({
+                                'from': item["from"],	 
+                                'message': item["message"],			 
+                                'date': item["data"]	 
+                            });
+                            io.sockets.emit('notify_message', m);
+                        }                       
+                    }
+                    client.close();
+                });
+            }
+        })
 
 				
 		// 1) ricezione username
@@ -65,12 +93,14 @@ server.listen(PORT, function () {
 			for(let user of users){
 				if(this.id == user.socketId){
 					log('User ' + colors.yellow(user.username) + "-" + colors.white(user.socket.id) + ' sent ' + colors.green(data));			 
-					// notifico a tutti i socket (compreso il mittente) il messaggio appena ricevuto 
-					io.sockets.emit('notify_message', JSON.stringify({
+                    // notifico a tutti i socket (compreso il mittente) il messaggio appena ricevuto
+                    let m =  JSON.stringify({
 						'from': user.username,	 
 						'message': data,			 
 						'date': new Date()	 
-					}));	
+					});
+                    io.sockets.emit('notify_message', m);
+                    newMessages.push(JSON.parse(m));	
 				}
 			}
 			
@@ -85,10 +115,22 @@ server.listen(PORT, function () {
 		 
 		// 3) user disconnected
 		socket.on('disconnect', function () {
-			log(' User ' + user.username + ' disconnected!');
+            log(' User ' + user.username + ' disconnected!');
+            mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
+                if (!err) {
+                    let db = client.db(DBNAME),
+                        collection = db.collection("Messaggi");
+                    collection.insertMany((newMessages), function (err, data)
+                    {
+                        if (err)
+                            console.log("Errore esecuzione query: " + err.message);
+                        client.close();
+                    });
+                }
+            })
 		});
-	});
     init();
+    })
 });
 
 // stampa i log con data e ora
@@ -560,5 +602,3 @@ app.use("/", function (req, res, next) {
 app.use(function (err, req, res, next) {
     console.log(err.stack);
 });
-
-/**********************CHAT*********************************/

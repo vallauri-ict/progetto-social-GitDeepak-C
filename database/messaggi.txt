@@ -1,0 +1,10 @@
+[{
+    "from": "alfio.alfio",
+    "message": "Ciao a tutti!",
+    "data": "2021-01-03T00:00:00Z"
+},
+{
+    "from": "lele.vernetti",
+    "message": "Ehi Alfio",
+    "data": "2021-01-03T00:00:00Z"
+}]
