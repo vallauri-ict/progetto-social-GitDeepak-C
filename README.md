@@ -1,21 +1,32 @@
 # Facegram 
 #### Autore: Chopra Deepak - Mollo Niccolò
 
-## Img Esempio
-![imgFigurativa](img/imgEsempio.PNG)
+## Main Page
+![Main Page](pagine/img/mainPage.PNG)
 
 ## Funzionamento
-La pagina è strutturata nel seguente modo:
-- navbar, che contiene il logo e alcuni button per le operazioni:
-    il logo e il pulsante home ricaricano sempilcemente la pagina, mentre contact me porta a una pagina statica di contatto, e infine abbiamo il pulsante Login, per appunto, loggarsi
-- header, con un logo e una sezione filtri contenente dei radio button, al change dei quale si aggiornano i dati
-- sezione delle proprietà (a sinistra), in cui al caricamento della pagina vengono caricati e stampati i dati presi dal databse
-- sezione mappa (a destra), non finita a causa dei problemi con Google maps api, però lo scopo era quello di visualizzare per ogni proprietà un segnaposto e al click avere una piccola descrizione(come il progetto geolocation fatto in terza)
-- footer, con una breve descrizione  
+All'avvio viene richiesto di effettuare il login, volendo si può anche creare un nuovo utente. Successivamente si passa alla pagina principale, dove:
+- in alto, abbiamo una navbar contenente un logo ed dei pulsanti che portano alle relative pagine (direct, contactMe) e anche il pulsante per il logOut
+- in seguito, abbiamo la section dove vengono caricati tutti i post in base agli utenti
+- in basso, abbiamo un footer contenente le varie icone che portano alle relative pagine
 
 ### Registrazione nuovo utente
-Per la registrazione, nella pagina di login, abbiamo sotto al button di sumbit un link alla pagina di registrazione. Dopo la registrazione, se è andato tutto a buon fine, l'utente viene riportato alla pagina di login per accedere con i nuovi dati(ho preferito questo modo così da verificare effettivamente che il database sia stato aggioranato).
-![imgFigurativa](images/imgSignUp.PNG)
+Per la registrazione, nella pagina di login, abbiamo sotto al button di sumbit un link alla pagina di registrazione. Dopo la registrazione, se è andato tutto a buon fine, l'utente viene portato alla pagina principale
+![signUp Page](pagine/img/signUpPage.PNG)
+
+### Users Page
+In questa pagina vengono visualizzati tutti gli utenti presenti nel db e le loro informazioni
+![users Page](pagine/img/usersPage.PNG)
+
+### Profile Page
+L'utente che ha effettuato l'accesso può visualizzare questa pagina dove vengono mostrate le sue informazioni
+![Profile Page](pagine/img/profilePage.PNG)
+
+### Chat Page
+![Chat Page](pagine/img/chatPage.PNG)
+
+### Contact me Page
+![Contact Me Page](pagine/img/contactMePage.PNG)
 
 ## Database
 Il database ha 3 tabelle:
@@ -31,11 +42,13 @@ Per ciascun tipo di file abbiamo una cartella specifica:
 - images -> contiene le foto utilizzate
 - js -> per i file .js
 - pagine -> contiene le altre pagine .html
-- php -> per i file .php
+- keys -> per i certificati e le chiavi
 - vendor -> cartella che contiene tutte le librerie neccesarie
 
 ## Bug e problemi
-- A volte l'applicazione non esegue correttamente le query di update(nessun errore però la tabella non viene aggiornata)
+- A volte succede che il server vada in timeout, credo sia legato ad Atlas che a volte non risponde correttamente 
+- A volte invece è un problema di cache, infatti, tenendo aperto l'ispector il problema si risolve (ho già provato a debuggare moltissimo ma non è mai uscito un errore)
+- Sempre per alcuni bug e rallentamenti causati da Atlas, ho diminuito le query e di conseguenza le operazioni sul db che facevo
 
 ## Team sviluppatori:
 > 5B Info - Vallauri Fossano Italy
