@@ -150,7 +150,8 @@ h1{
 }	
 
 .container{
-	margin-top: 20%;
+    margin-top: 10%;
+    margin-bottom: 8%;
 }
 
 @media (min-width: 1440px) and (max-width: 2200px){  
@@ -163,32 +164,40 @@ h1{
 .message-container {
 	margin: 12px 0;
 	padding: 8px;
-	background-color: #f1eeee;
+    background-color: transparent;
+    font-size: 1.2em;
 }
 
 .message-data {
-	font-weight: bold;
+	font-family: 'Hanken GroteskBold';
 }
 
 .message-from {
-	font-style: italic;
+	font-family: 'Hanken GroteskBold';
 }			
 
 #txtMessage{
 	background: none;
 	border: none;
 	border-radius: 0%;
-	border-bottom: 0.1em solid #eee;
+    border-bottom: 0.1em solid #eee;
+    color: #eee;
+    margin: 1% 0;
 }
 
 .row{
 	margin: 0;
 }
 
+.row div{
+    margin: 0 auto;
+}
+
 .btn-primary{
 	background: #333;
-	width: 150px;
-	border-color: #83ba43;
+	width: 170px;
+    border-color: #83ba43;
+    margin: 1% 5%;
 }
 
 .btn-primary:hover, .btn-primary:active, .btn-primary:focus{

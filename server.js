@@ -4,6 +4,7 @@ const DBNAME = "DbProgetto";
 const https = require("https");
 const fs = require("fs");
 const express = require("express");
+const { response } = require('express');
 const colors = require('colors');
 const app = express();
 const cors = require("cors");
@@ -24,14 +25,76 @@ const certificate = fs.readFileSync("pagine/keys/certificate.pem", "utf8");
 const credentials = { "key": privateKey, "cert": certificate }; 
 
 let paginaErrore,
-    username = "";
+    username = "",
+    users = [];
 
 const server = https.createServer(credentials, app);
 const io = require('socket.io')(server);	
 server.listen(PORT, function () {
     console.log("Server in ascolto sulla porta " + PORT);
+    // connessione di un client
+	// viene inettato 'socket' contenente IP e PORT del client
+	io.on('connection', function (socket) {
+		let user = {};
+		user.username = "";	
+		user.socket=socket;		
+		user.socketId=socket.id;		
+		users.push(user);		
+		log(' User ' + colors.yellow(socket.id) + ' connected!');
+
+				
+		// 1) ricezione username
+		socket.on('username', function (username) {
+			for(let user of users){
+				if(this.id == user.socketId){
+					user.username = username;
+					log(' User ' + colors.yellow(user.socket.id) + ' name is ' + colors.yellow(user.username));
+					console.log();
+				}
+			}
+
+			if(users.includes(user.username))
+				this.join("room1");
+			else
+				this.join("room2");
+		});
+
+
+    	// 2) ricezione di un messaggio	 
+		socket.on('message', function (data) {
+			for(let user of users){
+				if(this.id == user.socketId){
+					log('User ' + colors.yellow(user.username) + "-" + colors.white(user.socket.id) + ' sent ' + colors.green(data));			 
+					// notifico a tutti i socket (compreso il mittente) il messaggio appena ricevuto 
+					io.sockets.emit('notify_message', JSON.stringify({
+						'from': user.username,	 
+						'message': data,			 
+						'date': new Date()	 
+					}));	
+				}
+			}
+			
+			if(users.includes(user.username))
+				io.to("room1").emit("notify_message", response);
+			else
+				io.to("room2").emit("notify_message", response);
+
+			//notifico a tutti i socket(compreso il mittente) il messaggio appena ricevuto
+			//io.sockets.emit("notify_message", response);
+		});
+		 
+		// 3) user disconnected
+		socket.on('disconnect', function () {
+			log(' User ' + user.username + ' disconnected!');
+		});
+	});
     init();
 });
+
+// stampa i log con data e ora
+function log(data) {
+    console.log(colors.cyan("[" + new Date().toLocaleTimeString() + "]") + ": " + data);
+}
 
 app.use(cors());
 app.use(express.json({ "limit": "50mb" }));

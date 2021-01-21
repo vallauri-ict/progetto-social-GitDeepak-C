@@ -1,10 +1,16 @@
+"use strict";
 
 $(document).ready(function () {
+	let username;
 
-	let username = prompt("Inserisci lo username:");
+	let req = inviaRichiesta("GET", "/api/getUsername");
+	req.fail(errore);
+	req.done(function(data){
+		username = data["username"];
+	});
 	
 	let socket = io.connect();
-	console.log("socket: " + JSON.stringify(socket));
+	console.log("socket: " + socket);
 	
 	socket.on('connect', function(){				
 		// 1) invio username
@@ -31,7 +37,11 @@ $(document).ready(function () {
 
 	
 	socket.on('disconnect', function(){
-		alert("Sei stato disconnesso!");
+		//alert("Sei stato disconnesso!");
+		let d = new Date();
+		visualizza(username, JSON.stringify("Sei stato disconnesso!", d));	
+		$("#btnInvia").attr("enabled", true);
+		$("#btnDisconnetti").attr("ensabled", true);
 	});
 	
 
