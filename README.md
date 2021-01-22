@@ -45,6 +45,9 @@ Per ciascun tipo di file abbiamo una cartella specifica:
 - keys -> per i certificati e le chiavi
 - vendor -> cartella che contiene tutte le librerie neccesarie
 
+### Pubblicazione su Heroku
+L'applicazione è stata pubblicata con successo su heroku, quindi è possibile accedervi con il seguente link: https://facegram-app.herokuapp.com/
+
 ## Bug e problemi
 - A volte succede che il server vada in timeout, credo sia legato ad Atlas che a volte non risponde correttamente 
 - A volte invece è un problema di cache, infatti, tenendo aperto l'ispector il problema si risolve (ho già provato a debuggare moltissimo ma non è mai uscito un errore)
