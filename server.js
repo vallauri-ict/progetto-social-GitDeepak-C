@@ -593,8 +593,7 @@ app.post("/api/addPost", function (req, res, next) {
         else {
             let db = client.db(DBNAME),
                 collection = db.collection("Post"),
-                user = req.body.username,
-                img = req.body.img,
+                img = req.body.photo,
                 desc = req.body.description;
 
             var count;
@@ -612,8 +611,8 @@ app.post("/api/addPost", function (req, res, next) {
                         collection.insertOne(
                             {
                                 "idPost": idPost,
-                                "idUtente": user,
-                                "imgPost": result.secure_url,
+                                "idUtente": username,
+                                "imgPost": result[0],
                                 "description": desc,
                                 "dataPost": new Date(),
                                 "nLike": 0,
