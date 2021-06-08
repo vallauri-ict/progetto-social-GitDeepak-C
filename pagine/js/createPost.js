@@ -1,95 +1,48 @@
+"use strict";
 
-(function ($) {
-    "use strict";
-    let _lblErrore = $("#lblError");
+var reader;
 
-
-    _lblErrore.hide();
-    /*==================================================================
-    [ Focus input ]*/
-    $('.input100').each(function(){
-        $(this).on('blur', function(){
-            if($(this).val().trim() != "") {
-                $(this).addClass('has-val');
-            }
-            else {
-                $(this).removeClass('has-val');
-            }
-        })    
-    })
-  
-  
-    /*==================================================================
-    [ Validate ]*/
-    var input = $('.validate-input .input100');
-
-    $('.validate-form').on('submit',function(e){
-        e.preventDefault(); //stop reload page on form sumbit
-
-        var check = true;
-
-        for(var i=0; i<input.length; i++) {
-            if(validate(input[i]) == false){
-                showValidate(input[i]);
-                check=false;
-            }
+$(document).ready(function (){   
+    $("#btnAddPost").on("click", function(){
+        let desc = document.getElementById("txtDesc").value,
+            file = reader.result;
+        if(file && desc){
+            let request = inviaRichiesta("POST", "/api/addPost", {
+                "photo": file,
+                "description": desc
+            })
+            request.done(function(data){
+                console.log(data);
+            });
+            request.fail(function(err){
+                console.log(err.message);
+            })
         }
-        if(check){
-            controllaCampi();
-        }
-
-        return check;
     });
 
-
-    $('.validate-form .input100').each(function(){
-        $(this).focus(function(){
-           hideValidate(this);
-        });
+    //logout
+    $("#noLog").on("click", function(){
+        let req = inviaRichiesta("POST", "/api/logout");
+        req.fail(errore);
+        req.done(function(data){
+            console.log(data);
+            window.location = '../index.html';
+        })
     });
+});
 
-    function validate (input) {
-        if($(input).attr('type') == 'email' || $(input).attr('name') == 'email') {
-            if($(input).val().trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) == null) {
-                return false;
-            }
-        }
-        else {
-            if($(input).val().trim() == ''){
-                return false;
-            }
-        }
+function previewFile() {
+    var preview = document.querySelector('img');
+    var file = document.querySelector('input[type=file]').files[0];
+    reader = new FileReader();
+
+    reader.onloadend = function () {
+        preview.src = reader.result;
     }
 
-    function controllaCampi() {
-        let request = inviaRichiesta("POST", "/resetPassword",
-				{
-					"email": $('[name="email"]').val(),
-				}
-			);
-		request.fail(function (jqXHR, test_status, str_error) {
-			if (jqXHR.status == 401) {  // unauthorized
-				_lblErrore.show();
-			} else
-				errore(jqXHR, test_status, str_error)
-		});
-		request.done(function (data) {
-			window.location.href = "../login.html";
-		});
-	}
-
-    function showValidate(input) {
-        var thisAlert = $(input).parent();
-
-        $(thisAlert).addClass('alert-validate');
+    if (file) {
+        reader.readAsDataURL(file);
+    } else {
+        preview.src = "";
     }
-
-    function hideValidate(input) {
-        var thisAlert = $(input).parent();
-
-        $(thisAlert).removeClass('alert-validate');
-        _lblErrore.hide();
-    }
-
-
-})(jQuery);
+}

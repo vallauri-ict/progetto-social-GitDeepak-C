@@ -1,0 +1,272 @@
+[{
+  "username": "beatrice.bea",
+  "name": "Beatrice",
+  "surname": "Bea",
+  "telefono": 3333333333,
+  "email": "beatrice.bea@gmail.com",
+  "password": "$2a$10$5KZM7RbIsHxOiZCzabppzueK0JgiBrkFpTbE92rwv.QroIQwTNVwy",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172093/facegram/utenti/3_jnid1n.jpg",
+  "dataNascita": {
+    "$date": "2000-12-13T12:35:00Z"
+  },
+  "indirizzo": "Via cesare battisti 52, Torino",
+  "nFollowers": 5000,
+  "nSeguiti": 2000,
+  "nPost": 400
+},{
+  "username": "carlo.carletto",
+  "name": "Carlo",
+  "surname": "carletto",
+  "telefono": 3333333333,
+  "email": "carlo.carletto@gmail.com",
+  "password": "$2a$10$5KZM7RbIsHxOiZCzabppzueK0JgiBrkFpTbE92rwv.QroIQwTNVwy",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172093/facegram/utenti/93_yzcsxq.jpg",
+  "dataNascita": {
+    "$date": "2004-05-31T23:00:00Z"
+  },
+  "indirizzo": "Via giovanni piumati 52, Bra",
+  "nFollowers": 20000,
+  "nSeguiti": 500,
+  "nPost": 400
+},{
+  "username": "flaminia.fea",
+  "name": "Flaminia",
+  "surname": "fea",
+  "telefono": 3333333333,
+  "email": "flaminia.fea@gmail.com",
+  "password": "$2a$10$5KZM7RbIsHxOiZCzabppzueK0JgiBrkFpTbE92rwv.QroIQwTNVwy",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172093/facegram/utenti/94_m51jft.jpg",
+  "dataNascita": {
+    "$date": "1999-04-15T23:00:00Z"
+  },
+  "indirizzo": "Via umberto 52, Bra",
+  "nFollowers": 1000,
+  "nSeguiti": 200,
+  "nPost": 404
+},{
+  "username": "daniela.pietoso",
+  "name": "Daniela",
+  "surname": "Pietoso",
+  "telefono": 3333333333,
+  "email": "daniela.pietoso@gmail.com",
+  "password": "$2a$10$5KZM7RbIsHxOiZCzabppzueK0JgiBrkFpTbE92rwv.QroIQwTNVwy",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172093/facegram/utenti/81_tl0au2.jpg",
+  "dataNascita": {
+    "$date": "2000-07-10T00:00:00Z"
+  },
+  "indirizzo": "Via giovanni piumati 52, Bra",
+  "nFollowers": 4000,
+  "nSeguiti": 6000,
+  "nPost": 40
+},{
+  "username": "eraldo.mario",
+  "name": "Eraldo",
+  "surname": "mario",
+  "telefono": 3333333333,
+  "email": "eraldo.mario@gmail.com",
+  "password": "$2a$10$5KZM7RbIsHxOiZCzabppzueK0JgiBrkFpTbE92rwv.QroIQwTNVwy",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172093/facegram/utenti/38_ddatbr.jpg",
+  "dataNascita": {
+    "$date": "2000-02-28T23:00:00Z"
+  },
+  "indirizzo": "Via giovanni piumati 52, Bra",
+  "nFollowers": 9000,
+  "nSeguiti": 580,
+  "nPost": 20
+},{
+  "username": "leonardo.bonucci",
+  "name": "Leonardo",
+  "surname": "Bonucci",
+  "telefono": 3333333333,
+  "email": "leonardo.bonucci@gmail.com",
+  "password": "$2a$10$5KZM7RbIsHxOiZCzabppzueK0JgiBrkFpTbE92rwv.QroIQwTNVwy",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172093/facegram/utenti/63_h2rpkm.jpg",
+  "dataNascita": {
+    "$date": "1998-11-13T01:00:00Z"
+  },
+  "indirizzo": "Via giovanni piumati 52, Bra",
+  "nFollowers": 2,
+  "nSeguiti": 5000,
+  "nPost": 90
+},{
+  "username": "frank.bardo",
+  "name": "Frank",
+  "surname": "Bardo",
+  "telefono": 3333333333,
+  "email": "frank.bardo@gmail.com",
+  "password": "$2a$10$MmB30zEC/6DgfscvfzaqCeWlNjYZNltKRU2kTdnxBCm0rzJugY/de",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172092/facegram/utenti/34_xznibj.jpg",
+  "dataNascita": {
+    "$date": "2021-01-15T19:00:30.196Z"
+  },
+  "indirizzo": "Via Francesco giuseppe maria vaschet, Savi",
+  "nFollowers": 20000,
+  "nSeguiti": 5000,
+  "nPost": 40
+},{
+  "username": "irma.alba",
+  "name": "Irma",
+  "surname": "alba",
+  "telefono": 3333333333,
+  "email": "irma.alba@gmail.com",
+  "password": "$2a$10$5KZM7RbIsHxOiZCzabppzueK0JgiBrkFpTbE92rwv.QroIQwTNVwy",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172093/facegram/utenti/68_dozg6s.jpg",
+  "dataNascita": {
+    "$date": "1999-06-21T23:00:00Z"
+  },
+  "indirizzo": "Via giovanni piumati 52, Alba",
+  "nFollowers": 20,
+  "nSeguiti": 50,
+  "nPost": 40
+},{
+  "username": "alby.bongio",
+  "name": "Alberto",
+  "surname": "Bongioanni",
+  "telefono": 3333333333,
+  "email": "alby.bongio@gmail.com",
+  "password": "$2a$10$a68UWh7hn5aIeHeP0EDxQu4pc02Sxe5.ebYOqbLlcqqf9IkzS.hJO",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172093/facegram/utenti/77_ungj11.jpg",
+  "dataNascita": {
+    "$date": "2021-01-15T16:01:13.530Z"
+  },
+  "indirizzo": "Via dogliani penoso 1, Dogliani",
+  "nFollowers": 400,
+  "nSeguiti": 500,
+  "nPost": 15
+},{
+  "username": "mario.pietoso",
+  "name": "Mario",
+  "surname": "Pietoso",
+  "telefono": 3333333333,
+  "email": "mario.pietoso@gmail.com",
+  "password": "$2a$10$kCbxEJSqslLF7QFTbGPSO.jTFqJWW.vuGq2MTkzi2AfEzqQ7wOfvO",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172093/facegram/utenti/80_twcapu.jpg",
+  "dataNascita": {
+    "$date": "2021-01-15T19:02:03.908Z"
+  },
+  "indirizzo": "Via pietoso 18, Mondovì",
+  "nFollowers": 200000,
+  "nSeguiti": 500,
+  "nPost": 80
+},{
+  "username": "nicola.penoso",
+  "name": "Nicola",
+  "surname": "Penoso",
+  "telefono": 3333333333,
+  "email": "nicola.penoso@gmail.com",
+  "password": "$2a$10$5KZM7RbIsHxOiZCzabppzueK0JgiBrkFpTbE92rwv.QroIQwTNVwy",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172092/facegram/utenti/37_xdwkvk.jpg",
+  "dataNascita": {
+    "$date": "1998-05-20T00:00:00Z"
+  },
+  "indirizzo": "Via giovanni piumati 52, Cervere",
+  "nFollowers": 200,
+  "nSeguiti": 500,
+  "nPost": 4
+},{
+  "username": "gustavo.lima",
+  "name": "Gustavo",
+  "surname": "lima",
+  "telefono": 3333333333,
+  "email": "gustavo.lima@gmail.com",
+  "password": "$2a$10$5KZM7RbIsHxOiZCzabppzueK0JgiBrkFpTbE92rwv.QroIQwTNVwy",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172092/facegram/utenti/42_dnyn6a.jpg",
+  "dataNascita": {
+    "$date": "1999-08-24T00:00:00Z"
+  },
+  "indirizzo": "Via giovanni piumati 52, Bra",
+  "nFollowers": 200,
+  "nSeguiti": 50,
+  "nPost": 4
+},{
+  "username": "marta.maremma",
+  "name": "Marta",
+  "surname": "maremma",
+  "telefono": 3333333333,
+  "email": "marta.maremma@gmail.com",
+  "password": "$2a$10$5KZM7RbIsHxOiZCzabppzueK0JgiBrkFpTbE92rwv.QroIQwTNVwy",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172092/facegram/utenti/33_nwe1q2.jpg",
+  "dataNascita": {
+    "$date": "1998-05-20T00:00:00Z"
+  },
+  "indirizzo": "Via giovanni piumati 52, Carmagnola",
+  "nFollowers": 1500,
+  "nSeguiti": 5000,
+  "nPost": 9
+},{
+  "username": "niko.mollo",
+  "name": "Niko",
+  "surname": "Mollo",
+  "telefono": 3333333333,
+  "email": "n.mollo.9899@vallauri.edu",
+  "password": "$2a$12$fHl8wf9IkTjlRU7Ka3Rhyujnt3w6HzOdrrHsP8OgBD2XWapYSJpRG",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172092/facegram/utenti/21_pz91ub.jpg",
+  "dataNascita": {
+    "$date": "2021-01-15T15:41:44.723Z"
+  },
+  "indirizzo": "Via pocpaglia 11, Pocapaglia",
+  "nFollowers": 20,
+  "nSeguiti": 500,
+  "nPost": 40
+},{
+  "username": "olga.ollare",
+  "name": "Olga",
+  "surname": "ollare",
+  "telefono": 3333333333,
+  "email": "olga.ollare@gmail.com",
+  "password": "$2a$10$5KZM7RbIsHxOiZCzabppzueK0JgiBrkFpTbE92rwv.QroIQwTNVwy",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172092/facegram/utenti/16_vj4v5w.jpg",
+  "dataNascita": {
+    "$date": "2004-05-19T23:00:00Z"
+  },
+  "indirizzo": "Via giovanni piumati 52, Alba",
+  "nFollowers": 20000,
+  "nSeguiti": 5000,
+  "nPost": 400
+},{
+  "username": "alfio.alfio",
+  "name": "Alfio",
+  "surname": "Alfio",
+  "telefono": 3333333333,
+  "email": "alfio.alfio@icloud.com",
+  "password": "$2a$10$5KZM7RbIsHxOiZCzabppzueK0JgiBrkFpTbE92rwv.QroIQwTNVwy",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172092/facegram/utenti/49_wyzr8j.jpg",
+  "dataNascita": {
+    "$date": "2000-04-02T23:00:00Z"
+  },
+  "indirizzo": "Via giovanni piumati 52, Bra",
+  "nFollowers": 2000,
+  "nSeguiti": 5000,
+  "nPost": 40
+},{
+  "username": "deepak.chopra",
+  "name": "Deepak",
+  "surname": "Chopra",
+  "telefono": 3333333333,
+  "email": "deepak.chopra@icloud.com",
+  "password": "$2a$10$5KZM7RbIsHxOiZCzabppzueK0JgiBrkFpTbE92rwv.QroIQwTNVwy",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172092/facegram/utenti/40_vqoz1a.jpg",
+  "dataNascita": {
+    "$date": "2021-01-15T15:16:44.138Z"
+  },
+  "indirizzo": "via giovanni piumati 18, Bra",
+  "nFollowers": 200,
+  "nSeguiti": 400,
+  "nPost": 4
+},{
+  "username": "lele.vernetti",
+  "name": "Lele",
+  "surname": "Vernetti",
+  "telefono": 3333333333,
+  "email": "lele.vernetti@gmail.com",
+  "password": "$2a$10$k92YaQCcQ9EG.uxLqoad/.6amKzAsVkiEg0gFNoMnWB4jAicN18W.",
+  "photoProfile": "https://res.cloudinary.com/dct4tjerz/image/upload/v1623172092/facegram/utenti/22_xnguzo.jpg",
+  "dataNascita": {
+    "$date": "2021-01-15T16:10:54.100Z"
+  },
+  "indirizzo": "Via Omar picasso 12, Centallo",
+  "nFollowers": 300,
+  "nSeguiti": 500,
+  "nPost": 40,
+  "cell": "lele.vernetti@icloud.com"
+}]

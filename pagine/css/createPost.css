@@ -144,6 +144,11 @@ section div{
     background-color: #000;
 }
 
+#anteprima img{
+    width: 100%;
+    height: 100%;
+}
+
 #descrizione textarea{
     width: 100%;
 }

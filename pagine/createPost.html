@@ -13,16 +13,6 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="../fonts/iconic/css/material-design-iconic-font.min.css">
 <!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../vendor/animate/animate.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="../vendor/css-hamburgers/hamburgers.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../vendor/animsition/css/animsition.min.css">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="../vendor/select2/select2.min.css">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="../vendor/daterangepicker/daterangepicker.css">
-<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="../css/util.css">
 	<link rel="stylesheet" type="text/css" href="../css/createPost.css">
 <!--===============================================================================================-->
@@ -39,13 +29,13 @@
 		</nav>
 	</header>
 	<section>
-		<div id="anteprima"></div>
+		<div id="anteprima"><img></div>
 		<div class="upload-btn-wrapper">
 			<button class="btn"><i class="fa fa-file-image-o" aria-hidden="true"></i>&nbsp;Upload photo</button>
-			<input type="file" id="txtFile" />
+			<input type="file" id="txtFile" onchange="previewFile()"/>
 		</div>
 		<div id="descrizione">
-			<textarea placeholder="Description"></textarea>	
+			<textarea placeholder="Description" id="txtDesc"></textarea>	
 		</div>
 		<button id="btnAddPost">Add Post</button>
 	</section>	
@@ -59,15 +49,6 @@
 	<script src="../vendor/bootstrap/js/popper.js"></script>
 	<script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
 <!--===============================================================================================-->
-	<script src="../vendor/select2/select2.min.js"></script>
-<!--===============================================================================================-->
-	<script src="../vendor/daterangepicker/moment.min.js"></script>
-	<script src="../vendor/daterangepicker/daterangepicker.js"></script>
-<!--===============================================================================================-->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/pica/6.1.1/pica.min.js"> </script>
-	<script src="../vendor/countdowntime/countdowntime.js"></script>
-<!--===============================================================================================-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>	
 <script src="../js/createPost.js"></script>
 <script src="../js/libreria.js"></script>
 

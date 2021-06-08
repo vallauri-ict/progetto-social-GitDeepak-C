@@ -10,6 +10,7 @@ const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
+const upload = require("./pagine/js/upload/upload");
 
 let mongo = require("mongodb");
 let mongoClient = mongo.MongoClient;
@@ -25,6 +26,10 @@ const SALT_VALUE = 12;
 const privateKey = fs.readFileSync("pagine/keys/privateKey.pem", "utf8");
 const certificate = fs.readFileSync("pagine/keys/certificate.pem", "utf8");
 const credentials = { "key": privateKey, "cert": certificate };
+const CLOUDINARY_URL = "cloudinary://727434187412185:tnCdCY_-Gb6HbrRpnPTvUgxIrTM@dct4tjerz";
+const CLOUD_NAME = "dct4tjerz";
+const API_KEY = "727434187412185";
+const API_SECRET = "tnCdCY_-Gb6HbrRpnPTvUgxIrTM";
 
 let paginaErrore,
     username = "",
@@ -138,6 +143,8 @@ server.listen(PORT, function () {
     })
 });
 
+upload.init(CLOUD_NAME, API_KEY, API_SECRET);
+
 // stampa i log con data e ora
 function log(data) {
     console.log(colors.cyan("[" + new Date().toLocaleTimeString() + "]") + ": " + data);
@@ -205,16 +212,20 @@ app.use("/", function (req, res, next) {
 //Questa route deve essere scritta prima del metodo controllaToken()
 app.post('/api/login', function (req, res, next) {
     mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
-        if (err)
-            res.status(503).send("Errore di connessione al database").log(err.message);
+        if (err) {
+            res.status(503).send("Errore di connessione al database");
+            log(err.message);
+        }
         else {
             const db = client.db(DBNAME);
             const collection = db.collection("Utenti");
 
             username = req.body.username;
             collection.findOne({ "username": username }, function (err, dbUser) {
-                if (err)
-                    res.status(500).send("Internal Error in Query Execution").log(err.message);
+                if (err) {
+                    res.status(500).send("Internal Error in Query Execution")
+                    log(err.message);
+                }
                 else {
                     if (dbUser == null)
                         res.status(401).send("Username e/o Password non validi");
@@ -223,8 +234,10 @@ app.post('/api/login', function (req, res, next) {
                         //dbUser.password --> password cifrata contenuta nel DB
                         //Il metodo compare() cifra req.body.password e la va a confrontare con dbUser.password
                         bcrypt.compare(req.body.password, dbUser.password, function (err, ok) {
-                            if (err)
-                                res.status(500).send("Internal Error in bcrypt compare").log(err.message);
+                            if (err) {
+                                res.status(500).send("Internal Error in bcrypt compare");
+                                log(err.message);
+                            }
                             else {
                                 if (!ok)
                                     res.status(401).send("Username e/o Password non validi");
@@ -245,8 +258,10 @@ app.post('/api/login', function (req, res, next) {
 
 app.post('/api/signUp', function (req, res, next) {
     mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
-        if (err)
-            res.status(503).send("Errore di connessione al database").log(err.message);
+        if (err) {
+            res.status(503).send("Errore di connessione al database")
+            log(err.message);
+        }
         else {
             const db = client.db(DBNAME);
             const collection = db.collection("Utenti");
@@ -280,12 +295,16 @@ app.post('/api/signUp', function (req, res, next) {
                     "nSeguiti": nSeguiti,
                     "nPost": nPost
                 }, function (err, data) {
-                    if (err)
-                        res.status(500).send("Internal Error in Query Execution").log(err.message);
+                    if (err) {
+                        res.status(500).send("Internal Error in Query Execution")
+                        log(err.message);
+                    }
                     else {
                         collection.findOne({ "username": username }, function (errore, dbUser) {
-                            if (errore)
-                                res.status(500).send("Internal Error in Query Execution").log(errore.message);
+                            if (errore) {
+                                res.status(500).send("Internal Error in Query Execution");
+                                log(errore.message);
+                            }
                             else {
                                 if (dbUser == null)
                                     res.status(401).send("Username non trovato!!");
@@ -328,8 +347,10 @@ app.post('/api/signUp', function (req, res, next) {
 
 app.post('/resetPassword', function (req, res, next) {
     mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
-        if (err)
-            res.status(503).send("Errore di connessione al database").log(err.message);
+        if (err) {
+            res.status(503).send("Errore di connessione al database")
+            log(err.message);
+        }
         else {
             const db = client.db(DBNAME);
             const collection = db.collection("Utenti");
@@ -559,6 +580,71 @@ app.post("/api/commenta", function (req, res, next) {
                     res.status(200).send(data);
                 }
                 client.close();
+            });
+        }
+    })
+})
+
+app.post("/api/addPost", function (req, res, next) {
+    mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
+        if (err) {
+            res.status(503).send("Errore connessione al DB");
+        }
+        else {
+            let db = client.db(DBNAME),
+                collection = db.collection("Post"),
+                user = req.body.username,
+                img = req.body.img,
+                desc = req.body.description;
+
+            var count;
+            collection.countDocuments(function (err, nRecord) {
+                if (err) {
+                    console.log("Errore esecuzione query");
+                }
+                else {
+                    count = nRecord;
+                    console.log(count);
+                    let idPost = "p" + (count + 1);
+                    let vet = [];
+                    vet.push(img);
+                    upload.upload(vet, (result) => {
+                        collection.insertOne(
+                            {
+                                "idPost": idPost,
+                                "idUtente": user,
+                                "imgPost": result.secure_url,
+                                "description": desc,
+                                "dataPost": new Date(),
+                                "nLike": 0,
+                                "nCommenti": 0,
+                                "nTags": 0
+                            }, function (err, data) {
+                                if (err) {
+                                    res.status(500).send("Internal Error in Query Execution")
+                                    log(err.message);
+                                }
+                                else {
+                                    collection.findOne({ "idPost": idPost }, function (errore, dbPost) {
+                                        if (errore) {
+                                            res.status(500).send("Internal Error in Query Execution");
+                                            log(errore.message);
+                                        }
+                                        else {
+                                            if (dbPost == null)
+                                                res.status(401).send("Post non trovato!!");
+                                            else {
+                                                res.send({ "ris": "ok" });
+                                            }
+                                        }
+                                        client.close();
+                                    })
+                                }
+                            });
+                    }, (error) => {
+                        console.log(error.message);
+                    })
+                }
             });
         }
     })
