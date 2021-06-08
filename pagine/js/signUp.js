@@ -69,10 +69,9 @@
 				//console.log(base64data);
 				let req = inviaRichiesta("POST", "/api/signUp", 
                                         {   
-                                            "username":$('[name="username"]').val(), 
+                                            "email":$('[name="email"]').val(), 
                                             "name": $('[name="nome"]').val(), 
                                             "surname": $('[name="surname"]').val(), 
-                                            "password": $('[name="pass"]').val(),
                                             "address": $('[name="address"]').val(),
                                             "imgProfile": base64data
                                         });

@@ -1,0 +1,199 @@
+/******Aggiunta Font*********/
+@font-face {
+	font-family: 'Hanken Grotesk';
+	src: local('Hanken Grotesk'),   /* nome del font */
+		 url('../fonts/Hanken Grotesk/WEB/HankenGrotesk-Regular.woff') format('woff'),
+		 url('../fonts/Hanken Grotesk/OTF/HankenGrotesk-Regular.otf') format('otf');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Hanken GroteskBold';
+	src: local('Hanken Grotesk'),   /* nome del font */
+		 url('../fonts/Hanken Grotesk/WEB/HankenGrotesk-Semibold.woff') format('woff'),
+		 url('../fonts/Hanken Grotesk/OTF/HankenGrotesk-Semibold.otf') format('otf');
+	font-weight: bold;
+	font-style: normal;
+}
+
+html{
+     scroll-behavior: smooth;
+}
+
+body{
+    background: #2c2e31;
+    font-family: 'Hanken Grotesk', Arial, Helvetica, sans-serif;
+    color: #ddd;
+}
+
+::selection {
+    background-color: #83ba43;
+    color: white;
+  }
+
+/*********BARRA DI NAVIGAZIONE***************/
+
+header nav{
+    padding: 3px 20px 3px 20px;
+    background-color: rgba(0,0,0,0.7);
+    /*background-color: #222;*/
+    box-shadow: 1px 2px 2px #000;
+    overflow: hidden;
+    position: fixed;
+    color: #fff;
+    top: 0;
+    width: 100%;
+    z-index: 3000;
+}
+
+h2 a{
+    float: left;
+    margin-left: 20px;
+    color: #fff;
+    margin-top: 0.2em;
+    font-size: 0.9em;
+    text-decoration-line: none;
+    letter-spacing: .1em;
+    /*border: 1px solid;*/
+    padding: 10px;
+    /*animation: animazioneBorder 2.5s infinite;*/
+}
+
+h2 a i{
+    font-size: 1.4em !important;
+    vertical-align: middle;
+}
+
+h2 a:hover,h2 a:active{
+    color: #aaa !important;
+    cursor: pointer;
+    /*transition: 0.5s all;
+    animation: none;
+    border: 1px solid #aaa;*/
+}
+
+nav ul{
+    list-style-type: none;
+    display: flex;
+    justify-content: flex-end;
+}
+
+nav ul li{
+    margin-right: 2%;
+}
+
+nav ul li a {
+    display: block;
+    padding: 10px 20px 0px 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: .1em;
+    /*background-color: rgba(0,0,0,0.7);*/
+    text-align: center;
+    text-decoration-line: none;
+}
+
+nav ul li a:nth-of-type(1){
+    font-size: 1.2em;
+}
+
+nav ul li a:hover{
+    cursor: pointer;
+    color: #aaa !important;
+    text-decoration: none;
+}
+
+.icon{
+    color: #fff;
+    font-size: 1.6em !important;
+}
+
+.icon:hover{
+    cursor: pointer;
+    color: #aaa;
+}
+
+/***PARTE FORM**************************************************/
+section{
+    width: 50%;
+    padding: 20px;
+    margin: 0 auto;
+    margin-top: 6em;
+    border-radius: 10px;
+
+    background: #83ba43;
+    background: -webkit-linear-gradient(top, #9FFF9A, #0F4C81);
+    background: -o-linear-gradient(top, #9FFF9A, #0F4C81);
+    background: -moz-linear-gradient(top, #9FFF9A, #0F4C81);
+    background: linear-gradient(top, #9FFF9A, #0F4C81);
+}
+
+section div{
+    margin: 5px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+#anteprima{
+    width: 100%;
+    height: 500px;
+    margin: 0 auto;
+    margin-bottom: 1.5em;
+    background-color: #000;
+}
+
+#descrizione textarea{
+    width: 100%;
+}
+
+#btnAddPost{
+    width: 50%;
+    height: 40px;
+    display: block;
+    border-radius: 5px;
+    margin: 0 auto;
+    margin-top: 0.5em;
+    background-color: #fff;
+    border: 1px solid #111;
+}
+
+#btnAddPost:hover{
+    cursor: pointer;
+    transform: scale(1.2);
+    background: #83ba43;
+    background: -webkit-linear-gradient(top, #9FFF9A, #0F4C81);
+    background: -o-linear-gradient(top, #9FFF9A, #0F4C81);
+    background: -moz-linear-gradient(top, #9FFF9A, #0F4C81);
+    background: linear-gradient(top, #9FFF9A, #0F4C81);   
+}
+
+/*****************CUSTOM FILE INPUT***************/
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    color: #fff;
+  }
+  
+  .btn {
+    border: 1px solid #111;
+    color: #fff transparent;
+    padding: 8px 20px;
+    border-radius: 8px;
+    width: 100%;
+    margin-bottom: 0.3em;
+  }
+  
+  .btn:hover {
+    cursor: pointer;
+  }
+  
+  .upload-btn-wrapper input[type=file] {
+    font-size: 100px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+  }

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Facegram | Login</title>
+	<title>Facegram | Create Post</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
@@ -24,60 +24,32 @@
 	<link rel="stylesheet" type="text/css" href="../vendor/daterangepicker/daterangepicker.css">
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="../css/util.css">
-	<link rel="stylesheet" type="text/css" href="../css/login.css">
+	<link rel="stylesheet" type="text/css" href="../css/createPost.css">
 <!--===============================================================================================-->
 </head>
 <body>
-	
-	<div class="limiter">
-		<div class="container-login100" style="background: #2c2e31;">
-			<div class="wrap-login100">
-				<form class="login100-form validate-form">
-					<span class="login100-form-logo">
-						<i class="fa fa-user"></i>
-					</span>
-
-					<span class="login100-form-title p-b-34 p-t-27">
-						Log in
-					</span>
-
-					<div class="wrap-input100 validate-input" data-validate = "Enter username">
-						<input class="input100" type="text" name="username" placeholder="Username">
-						<span class="focus-input100" data-placeholder="&#xf207;"></span>
-					</div>
-
-					<div class="wrap-input100 validate-input" data-validate="Enter password">
-						<input class="input100" type="password" name="pass" placeholder="Password">
-						<span class="focus-input100" data-placeholder="&#xf191;"></span>
-					</div>
-
-					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" id="btnLogin">
-							Login
-						</button>
-					</div>
-					<div class="text-center">
-						<a class="txt1" href="signUp.html">
-							Not have an account yet?
-						</a>
-					</div>
-					<div class="text-center">
-						<div class="alert alert-danger alert-dismissible" id="lblError">			
-							<button type="button" class="close" >&times;</button>
-							<strong>Attenzione!</strong> Credenziali non valide</div>
-					</div>
-					<div class="text-center p-t-40">
-						<a class="txt1" href="resetPwd.html">
-							Forgot Password?
-						</a>
-					</div>
-				</form>
-			</div>
+	<header>
+		<nav id="navBar">
+			<h2><a title="Facegram" href="index.html"><i class="fa fa-instagram"></i> | Facegram</a></h2>
+			<ul>
+				<li><a title="Direct" href="chat.html"><i class="fa fa-paper-plane icon" aria-hidden="true"></i></a></li>
+				<li><a title="Contact Me" href="contatti.html"><i class="fa fa-address-card icon" aria-hidden="true"></i></a></li>                
+				<li id="noLog"><a title="Login" href="">LogOut<i class="fa fa-sign-out" aria-hidden="true"></i></a></li>
+			</ul>
+		</nav>
+	</header>
+	<section>
+		<div id="anteprima"></div>
+		<div class="upload-btn-wrapper">
+			<button class="btn"><i class="fa fa-file-image-o" aria-hidden="true"></i>&nbsp;Upload photo</button>
+			<input type="file" id="txtFile" />
 		</div>
-	</div>
+		<div id="descrizione">
+			<textarea placeholder="Description"></textarea>	
+		</div>
+		<button id="btnAddPost">Add Post</button>
+	</section>	
 	
-
-	<div id="dropDownSelect1"></div>
 	
 <!--===============================================================================================-->
 	<script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
@@ -92,10 +64,11 @@
 	<script src="../vendor/daterangepicker/moment.min.js"></script>
 	<script src="../vendor/daterangepicker/daterangepicker.js"></script>
 <!--===============================================================================================-->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/pica/6.1.1/pica.min.js"> </script>
 	<script src="../vendor/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>	
-<script src="../js/login.js"></script>
+<script src="../js/createPost.js"></script>
 <script src="../js/libreria.js"></script>
 
 </body>

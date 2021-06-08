@@ -9,6 +9,7 @@ const colors = require('colors');
 const app = express();
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const nodemailer = require("nodemailer");
 
 let mongo = require("mongodb");
 let mongoClient = mongo.MongoClient;
@@ -20,9 +21,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const PORT = 1337;
 const TTL_Token = 500; //espresso in sec 
+const SALT_VALUE = 12;
 const privateKey = fs.readFileSync("pagine/keys/privateKey.pem", "utf8");
 const certificate = fs.readFileSync("pagine/keys/certificate.pem", "utf8");
-const credentials = { "key": privateKey, "cert": certificate }; 
+const credentials = { "key": privateKey, "cert": certificate };
 
 let paginaErrore,
     username = "",
@@ -31,105 +33,108 @@ let paginaErrore,
     newMessages = [];
 
 const server = https.createServer(credentials, app);
-const io = require('socket.io')(server);	
+const io = require('socket.io')(server);
+const TRANSPORTER = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'gestioneprogettoFG@gmail.com',
+        pass: 'FG2021!.'
+    }
+});
 server.listen(PORT, function () {
     console.log("Server in ascolto sulla porta " + PORT);
     // connessione di un client
-	// viene inettato 'socket' contenente IP e PORT del client
-	io.on('connection', function (socket) {
-		let user = {};
-		user.username = "";	
-		user.socket=socket;		
-		user.socketId=socket.id;		
-		users.push(user);		
+    // viene inettato 'socket' contenente IP e PORT del client
+    io.on('connection', function (socket) {
+        let user = {};
+        user.username = "";
+        user.socket = socket;
+        user.socketId = socket.id;
+        users.push(user);
         log(' User ' + colors.yellow(socket.id) + ' connected!');
         mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
             if (!err) {
                 let db = client.db(DBNAME),
                     collection = db.collection("Messaggi");
-                collection.find().toArray(function (err, data)
-                {
-                    if (err)
-                    {
+                collection.find().toArray(function (err, data) {
+                    if (err) {
                         console.log("Errore esecuzione query: " + err.message);
                     }
-                    else
-                    {
+                    else {
                         oldMessages = data;
-                        for(let item of oldMessages){
-                            let m =  JSON.stringify({
-                                'from': item["from"],	 
-                                'message': item["message"],			 
-                                'date': item["data"]	 
+                        for (let item of oldMessages) {
+                            let m = JSON.stringify({
+                                'from': item["from"],
+                                'message': item["message"],
+                                'date': item["data"]
                             });
                             io.sockets.emit('notify_message', m);
-                        }                       
+                        }
                     }
                     client.close();
                 });
             }
         })
 
-				
-		// 1) ricezione username
-		socket.on('username', function (username) {
-			for(let user of users){
-				if(this.id == user.socketId){
-					user.username = username;
-					log(' User ' + colors.yellow(user.socket.id) + ' name is ' + colors.yellow(user.username));
-					console.log();
-				}
-			}
 
-			if(users.includes(user.username))
-				this.join("room1");
-			else
-				this.join("room2");
-		});
+        // 1) ricezione username
+        socket.on('username', function (username) {
+            for (let user of users) {
+                if (this.id == user.socketId) {
+                    user.username = username;
+                    log(' User ' + colors.yellow(user.socket.id) + ' name is ' + colors.yellow(user.username));
+                    console.log();
+                }
+            }
+
+            if (users.includes(user.username))
+                this.join("room1");
+            else
+                this.join("room2");
+        });
 
 
-    	// 2) ricezione di un messaggio	 
-		socket.on('message', function (data) {
-			for(let user of users){
-				if(this.id == user.socketId){
-					log('User ' + colors.yellow(user.username) + "-" + colors.white(user.socket.id) + ' sent ' + colors.green(data));			 
+        // 2) ricezione di un messaggio	 
+        socket.on('message', function (data) {
+            for (let user of users) {
+                if (this.id == user.socketId) {
+                    log('User ' + colors.yellow(user.username) + "-" + colors.white(user.socket.id) + ' sent ' + colors.green(data));
                     // notifico a tutti i socket (compreso il mittente) il messaggio appena ricevuto
-                    let m =  JSON.stringify({
-						'from': user.username,	 
-						'message': data,			 
-						'date': new Date()	 
-					});
+                    let m = JSON.stringify({
+                        'from': user.username,
+                        'message': data,
+                        'date': new Date()
+                    });
                     io.sockets.emit('notify_message', m);
-                    newMessages.push(JSON.parse(m));	
-				}
-			}
-			
-			if(users.includes(user.username))
-				io.to("room1").emit("notify_message", response);
-			else
-				io.to("room2").emit("notify_message", response);
+                    newMessages.push(JSON.parse(m));
+                }
+            }
 
-			//notifico a tutti i socket(compreso il mittente) il messaggio appena ricevuto
-			//io.sockets.emit("notify_message", response);
-		});
-		 
-		// 3) user disconnected
-		socket.on('disconnect', function () {
+            if (users.includes(user.username))
+                io.to("room1").emit("notify_message", response);
+            else
+                io.to("room2").emit("notify_message", response);
+
+            //notifico a tutti i socket(compreso il mittente) il messaggio appena ricevuto
+            //io.sockets.emit("notify_message", response);
+        });
+
+        // 3) user disconnected
+        socket.on('disconnect', function () {
             log(' User ' + user.username + ' disconnected!');
             mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
                 if (!err) {
                     let db = client.db(DBNAME),
                         collection = db.collection("Messaggi");
-                    collection.insertMany((newMessages), function (err, data)
-                    {
+                    collection.insertMany((newMessages), function (err, data) {
                         if (err)
                             console.log("Errore esecuzione query: " + err.message);
                         client.close();
                     });
                 }
             })
-		});
-    init();
+        });
+        init();
     })
 });
 
@@ -245,33 +250,29 @@ app.post('/api/signUp', function (req, res, next) {
         else {
             const db = client.db(DBNAME);
             const collection = db.collection("Utenti");
-            let ts = new Date();
 
-            username = req.body.username;
             let name = req.body.name,
                 surname = req.body.surname,
                 telefono = 3333333333,
-                email = username + "@gmail.com",
-                password = req.body.password,
+                email = req.body.email,
                 photo = req.body.imgProfile,
                 dataNascita = new Date(),
                 indirizzo = req.body.address,
                 nFollow = 0,
                 nSeguiti = 0,
-                nPost = 0,
-                regex = new RegExp("^\\$2[ayb]\\$.{56}$"),
-                pwd;
-                // se la password corrente non è in formato bcrypt
-                if (!regex.test(password)) {     
-                    pwd = bcrypt.hashSync(password, 10)
-                }
+                nPost = 0;
+
+            username = name.toLowerCase() + '.' + surname.toLowerCase();
+            const rndPsw = Math.random().toString(36).substr(2, 8);
+            let hashPsw = bcrypt.hashSync(rndPsw, SALT_VALUE);
             collection.insertOne(
-                {   "username": username,
+                {
+                    "username": username,
                     "name": name,
                     "surname": surname,
                     "telefono": telefono,
                     "email": email,
-                    "password": pwd,
+                    "password": hashPsw,
                     "photoProfile": photo,
                     "dataNascita": dataNascita,
                     "indirizzo": indirizzo,
@@ -279,26 +280,94 @@ app.post('/api/signUp', function (req, res, next) {
                     "nSeguiti": nSeguiti,
                     "nPost": nPost
                 }, function (err, data) {
-                if (err)
-                    res.status(500).send("Internal Error in Query Execution").log(err.message);
-                else {
-                    collection.findOne({"username": username}, function(errore, dbUser){
-                        if(errore)
-                            res.status(500).send("Internal Error in Query Execution").log(errore.message);
-                        else
-                        {
-                            if(dbUser == null)
-                                res.status(401).send("Username non trovato!!");
-                            else{
-                                let token = createToken(dbUser);
-                                writeCookie(res, token);
-                                res.send({ "username": username });
+                    if (err)
+                        res.status(500).send("Internal Error in Query Execution").log(err.message);
+                    else {
+                        collection.findOne({ "username": username }, function (errore, dbUser) {
+                            if (errore)
+                                res.status(500).send("Internal Error in Query Execution").log(errore.message);
+                            else {
+                                if (dbUser == null)
+                                    res.status(401).send("Username non trovato!!");
+                                else {
+                                    let token = createToken(dbUser);
+                                    writeCookie(res, token);
+
+                                    let mailOptions = {
+                                        from: 'gestioneprogettoFG@gmail.com',
+                                        to: `${email}`,
+                                        subject: 'Registrazione a Facegram',
+                                        text: `La tua password è: ${rndPsw}`,
+                                        html: `
+                                                      <head><link href="https://emoji-css.afeld.me/emoji.css" rel="stylesheet"></head>
+                                                      <body>
+                                                          <i class="em em-flag-it" aria-role="presentation" aria-label="Italian Flag"></i> Ciao: ${username}<br/>
+                                                          <i class="em em-flag-it" aria-role="presentation" aria-label="Italian Flag"></i> La tua password è: ${rndPsw}<br/><br/>
+                                                      </body>`
+                                    };
+
+                                    TRANSPORTER.sendMail(mailOptions, function (error, info) {
+                                        if (error) {
+                                            console.log(error);
+                                            next(error);
+                                        } else {
+                                            response.status(200).send({});
+                                        }
+                                    });
+
+                                    res.send({ "username": username });
+                                }
                             }
+                            client.close();
+                        })
+                    }
+                });
+        }
+    });
+});
+
+app.post('/resetPassword', function (req, res, next) {
+    mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
+        if (err)
+            res.status(503).send("Errore di connessione al database").log(err.message);
+        else {
+            const db = client.db(DBNAME);
+            const collection = db.collection("Utenti");
+
+            let email = req.body.email;
+            console.log("mail: " + email);
+            const rndPsw = Math.random().toString(36).substr(2, 8);
+            //console.log("password nuova: " + rndPsw);
+            let hashPsw = bcrypt.hashSync(rndPsw, SALT_VALUE);
+            console.log("994: reset mail");
+            collection.updateOne({ "email": email }, { $set: { "password": hashPsw } }, function (err, data) {
+                if (err)
+                    console.log("Errore esecuzione query: " + err.message);
+                else {
+                    let mailOptions = {
+                        from: 'gestioneprogettoFG@gmail.com',
+                        to: `${email}`,
+                        subject: 'Reset password',
+                        text: `La tua nuova password è: ${rndPsw}`,
+                        html: `
+                                      <head><link href="https://emoji-css.afeld.me/emoji.css" rel="stylesheet"></head>
+                                      <body>
+                                          <i class="em em-flag-it" aria-role="presentation" aria-label="Italian Flag"></i> La tua nuova password è: ${rndPsw}<br/><br/>
+                                      </body>`
+                    };
+
+                    TRANSPORTER.sendMail(mailOptions, function (error, info) {
+                        if (error) {
+                            console.log(error);
+                            next(error);
+                        } else {
+                            response.status(200).send({});
                         }
-                        client.close();
-                    })
+                    });
+                    res.status(200).send(data);
                 }
-            });
+                client.close();
+            })
         }
     });
 });
@@ -386,14 +455,11 @@ app.get("/api/getPost", function (req, res, next) {
         else {
             let db = client.db(DBNAME),
                 collection = db.collection("Post");
-            collection.find().toArray(function (err, data)
-            {
-                if (err)
-                {
+            collection.find().toArray(function (err, data) {
+                if (err) {
                     console.log("Errore esecuzione query: " + err.message);
                 }
-                else
-                {
+                else {
                     res.status(200).send(data);
                 }
                 client.close();
@@ -402,15 +468,15 @@ app.get("/api/getPost", function (req, res, next) {
     })
 });
 
-app.get("/api/getUsername", function(req, res, next){
+app.get("/api/getUsername", function (req, res, next) {
     let token = readCookie(req);
-    if(token == "")
+    if (token == "")
         inviaErrore(req, res, 403, "Token mancante");
     else
-        res.send({"username": username});
+        res.send({ "username": username });
 })
 
-app.get("/api/getUsers", function(req, res, next){
+app.get("/api/getUsers", function (req, res, next) {
     mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
         if (err) {
             res.status(503).send("Errore connessione al DB");
@@ -418,7 +484,7 @@ app.get("/api/getUsers", function(req, res, next){
         else {
             let db = client.db(DBNAME),
                 collection = db.collection("Utenti");
-            collection.find().toArray(function (err, data){
+            collection.find().toArray(function (err, data) {
                 if (err)
                     console.log("Errore esecuzione query: " + err.message);
                 else
@@ -429,8 +495,8 @@ app.get("/api/getUsers", function(req, res, next){
     })
 })
 
-app.post("/api/getUserData", function(req, res, next){
-        mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
+app.post("/api/getUserData", function (req, res, next) {
+    mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
         if (err) {
             res.status(503).send("Errore connessione al DB");
         }
@@ -438,14 +504,11 @@ app.post("/api/getUserData", function(req, res, next){
             let db = client.db(DBNAME),
                 collection = db.collection("Utenti"),
                 _user = req.body.username;
-            collection.findOne({"username": _user}, function (err, data)
-            {
-                if (err)
-                {
+            collection.findOne({ "username": _user }, function (err, data) {
+                if (err) {
                     console.log("Errore esecuzione query: " + err.message);
                 }
-                else
-                {
+                else {
                     res.status(200).send(data);
                 }
                 client.close();
@@ -454,7 +517,7 @@ app.post("/api/getUserData", function(req, res, next){
     })
 })
 
-app.post("/api/like", function(req, res, next){
+app.post("/api/like", function (req, res, next) {
     mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
         if (err) {
             res.status(503).send("Errore connessione al DB");
@@ -466,14 +529,11 @@ app.post("/api/like", function(req, res, next){
                 like = req.body.like,
                 n;
             like ? (n = 1) : (n = -1)
-            collection.updateOne({"idUtente": user}, {$inc: {"nLike": n}}, function (err, data)
-            {
-                if (err)
-                {
+            collection.updateOne({ "idUtente": user }, { $inc: { "nLike": n } }, function (err, data) {
+                if (err) {
                     console.log("Errore esecuzione query: " + err.message);
                 }
-                else
-                {
+                else {
                     res.status(200).send(data);
                 }
                 client.close();
@@ -482,7 +542,7 @@ app.post("/api/like", function(req, res, next){
     })
 })
 
-app.post("/api/commenta", function(req, res, next){
+app.post("/api/commenta", function (req, res, next) {
     mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
         if (err) {
             res.status(503).send("Errore connessione al DB");
@@ -491,14 +551,11 @@ app.post("/api/commenta", function(req, res, next){
             let db = client.db(DBNAME),
                 collection = db.collection("Post"),
                 user = req.body.username;
-            collection.updateOne({"idUtente": user}, {$inc: {"nCommenti": 1}}, function (err, data)
-            {
-                if (err)
-                {
+            collection.updateOne({ "idUtente": user }, { $inc: { "nCommenti": 1 } }, function (err, data) {
+                if (err) {
                     console.log("Errore esecuzione query: " + err.message);
                 }
-                else
-                {
+                else {
                     res.status(200).send(data);
                 }
                 client.close();
@@ -507,7 +564,7 @@ app.post("/api/commenta", function(req, res, next){
     })
 })
 
-app.post("/api/getUserPost", function(req, res, next){
+app.post("/api/getUserPost", function (req, res, next) {
     mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
         if (err) {
             res.status(503).send("Errore connessione al DB");
@@ -516,14 +573,11 @@ app.post("/api/getUserPost", function(req, res, next){
             let db = client.db(DBNAME),
                 collection = db.collection("Post"),
                 user = req.body.username;
-            collection.find({"idUtente": user}).toArray(function (err, data)
-            {
-                if (err)
-                {
+            collection.find({ "idUtente": user }).toArray(function (err, data) {
+                if (err) {
                     console.log("Errore esecuzione query: " + err.message);
                 }
-                else
-                {
+                else {
                     res.status(200).send(data);
                 }
                 client.close();
@@ -532,7 +586,7 @@ app.post("/api/getUserPost", function(req, res, next){
     })
 })
 
-app.post("/api/modifyUserData", function(req, res, next){
+app.post("/api/modifyUserData", function (req, res, next) {
     mongoClient.connect(CONNECTIONSTRING, CONNECTIONOPTIONS, function (err, client) {
         if (err) {
             res.status(503).send("Errore connessione al DB");
@@ -543,9 +597,9 @@ app.post("/api/modifyUserData", function(req, res, next){
                 user = req.body.username,
                 cell = req.body.id,
                 newVal = req.body.nuovoValore;
-            switch(cell){
+            switch (cell) {
                 case "username":
-                    collection.updateOne({"username": user}, {$set: {"username": newVal}}, function (err, data){
+                    collection.updateOne({ "username": user }, { $set: { "username": newVal } }, function (err, data) {
                         if (err)
                             console.log("Errore esecuzione query: " + err.message);
                         else
@@ -554,7 +608,7 @@ app.post("/api/modifyUserData", function(req, res, next){
                     });
                     break;
                 case "email":
-                    collection.updateOne({"username": user}, {$set: {"email": newVal}}, function (err, data){
+                    collection.updateOne({ "username": user }, { $set: { "email": newVal } }, function (err, data) {
                         if (err)
                             console.log("Errore esecuzione query: " + err.message);
                         else
@@ -563,7 +617,7 @@ app.post("/api/modifyUserData", function(req, res, next){
                     });
                     break;
                 case "dataNascita":
-                    collection.updateOne({"username": user}, {$set: {"dataNascita": newVal}}, function (err, data){
+                    collection.updateOne({ "username": user }, { $set: { "dataNascita": newVal } }, function (err, data) {
                         if (err)
                             console.log("Errore esecuzione query: " + err.message);
                         else
@@ -572,7 +626,7 @@ app.post("/api/modifyUserData", function(req, res, next){
                     });
                     break;
                 case "indirizzo":
-                    collection.updateOne({"username": user}, {$set: {"indirizzo": newVal}}, function (err, data){
+                    collection.updateOne({ "username": user }, { $set: { "indirizzo": newVal } }, function (err, data) {
                         if (err)
                             console.log("Errore esecuzione query: " + err.message);
                         else
@@ -581,7 +635,7 @@ app.post("/api/modifyUserData", function(req, res, next){
                     });
                     break;
             }
-            
+
         }
     })
 })
