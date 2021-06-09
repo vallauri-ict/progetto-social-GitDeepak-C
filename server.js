@@ -20,7 +20,7 @@ const CONNECTIONOPTIONS = { useNewUrlParser: true, useUnifiedTopology: true };
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const PORT = 1337;
+const PORT = process.env.PORT || 1337;
 const TTL_Token = 500; //espresso in sec 
 const SALT_VALUE = 12;
 const privateKey = fs.readFileSync("pagine/keys/privateKey.pem", "utf8");
