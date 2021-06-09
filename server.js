@@ -71,7 +71,7 @@ server.listen(PORT, function () {
                             let m = JSON.stringify({
                                 'from': item["from"],
                                 'message': item["message"],
-                                'date': item["data"]
+                                'date': item["date"]
                             });
                             io.sockets.emit('notify_message', m);
                         }
@@ -108,7 +108,7 @@ server.listen(PORT, function () {
                     let m = JSON.stringify({
                         'from': user.username,
                         'message': data,
-                        'date': new Date()
+                        'date': new Date().toISOString()
                     });
                     io.sockets.emit('notify_message', m);
                     newMessages.push(JSON.parse(m));
@@ -280,67 +280,73 @@ app.post('/api/signUp', function (req, res, next) {
             username = name.toLowerCase() + '.' + surname.toLowerCase();
             const rndPsw = Math.random().toString(36).substr(2, 8);
             let hashPsw = bcrypt.hashSync(rndPsw, SALT_VALUE);
-            collection.insertOne(
-                {
-                    "username": username,
-                    "name": name,
-                    "surname": surname,
-                    "telefono": telefono,
-                    "email": email,
-                    "password": hashPsw,
-                    "photoProfile": photo,
-                    "dataNascita": dataNascita,
-                    "indirizzo": indirizzo,
-                    "nFollowers": nFollow,
-                    "nSeguiti": nSeguiti,
-                    "nPost": nPost
-                }, function (err, data) {
-                    if (err) {
-                        res.status(500).send("Internal Error in Query Execution")
-                        log(err.message);
-                    }
-                    else {
-                        collection.findOne({ "username": username }, function (errore, dbUser) {
-                            if (errore) {
-                                res.status(500).send("Internal Error in Query Execution");
-                                log(errore.message);
-                            }
-                            else {
-                                if (dbUser == null)
-                                    res.status(401).send("Username non trovato!!");
-                                else {
-                                    let token = createToken(dbUser);
-                                    writeCookie(res, token);
-
-                                    let mailOptions = {
-                                        from: 'gestioneprogettoFG@gmail.com',
-                                        to: `${email}`,
-                                        subject: 'Registrazione a Facegram',
-                                        text: `La tua password è: ${rndPsw}`,
-                                        html: `
-                                                      <head><link href="https://emoji-css.afeld.me/emoji.css" rel="stylesheet"></head>
-                                                      <body>
-                                                          <i class="em em-flag-it" aria-role="presentation" aria-label="Italian Flag"></i> Ciao: ${username}<br/>
-                                                          <i class="em em-flag-it" aria-role="presentation" aria-label="Italian Flag"></i> La tua password è: ${rndPsw}<br/><br/>
-                                                      </body>`
-                                    };
-
-                                    TRANSPORTER.sendMail(mailOptions, function (error, info) {
-                                        if (error) {
-                                            console.log(error);
-                                            next(error);
-                                        } else {
-                                            response.status(200).send({});
-                                        }
-                                    });
-
-                                    res.send({ "username": username });
+            let vet = [];
+            vet.push(photo);
+            upload.upload(vet, (result) => {
+                collection.insertOne(
+                    {
+                        "username": username,
+                        "name": name,
+                        "surname": surname,
+                        "telefono": telefono,
+                        "email": email,
+                        "password": hashPsw,
+                        "photoProfile": result[0],
+                        "dataNascita": dataNascita,
+                        "indirizzo": indirizzo,
+                        "nFollowers": nFollow,
+                        "nSeguiti": nSeguiti,
+                        "nPost": nPost
+                    }, function (err, data) {
+                        if (err) {
+                            res.status(500).send("Internal Error in Query Execution")
+                            log(err.message);
+                        }
+                        else {
+                            collection.findOne({ "username": username }, function (errore, dbUser) {
+                                if (errore) {
+                                    res.status(500).send("Internal Error in Query Execution");
+                                    log(errore.message);
                                 }
-                            }
-                            client.close();
-                        })
-                    }
-                });
+                                else {
+                                    if (dbUser == null)
+                                        res.status(401).send("Username non trovato!!");
+                                    else {
+                                        let token = createToken(dbUser);
+                                        writeCookie(res, token);
+    
+                                        let mailOptions = {
+                                            from: 'gestioneprogettoFG@gmail.com',
+                                            to: `${email}`,
+                                            subject: 'Registrazione a Facegram',
+                                            text: `La tua password è: ${rndPsw}`,
+                                            html: `
+                                                          <head><link href="https://emoji-css.afeld.me/emoji.css" rel="stylesheet"></head>
+                                                          <body>
+                                                              <i class="em em-flag-it" aria-role="presentation" aria-label="Italian Flag"></i> Ciao: ${username}<br/>
+                                                              <i class="em em-flag-it" aria-role="presentation" aria-label="Italian Flag"></i> La tua password è: ${rndPsw}<br/><br/>
+                                                          </body>`
+                                        };
+    
+                                        TRANSPORTER.sendMail(mailOptions, function (error, info) {
+                                            if (error) {
+                                                console.log(error);
+                                                next(error);
+                                            } else {
+                                                response.status(200).send({});
+                                            }
+                                        });
+    
+                                        res.send({ "username": username });
+                                    }
+                                }
+                                client.close();
+                            })
+                        }
+                    });
+            }, (error) => {
+                console.log(error.message);
+            })
         }
     });
 });
@@ -633,7 +639,7 @@ app.post("/api/addPost", function (req, res, next) {
                                             if (dbPost == null)
                                                 res.status(401).send("Post non trovato!!");
                                             else {
-                                                res.send({ "ris": "ok" });
+                                                res.send({ "ris": "OK" });
                                             }
                                         }
                                         client.close();

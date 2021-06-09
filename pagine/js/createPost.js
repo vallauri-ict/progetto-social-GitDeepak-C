@@ -13,6 +13,9 @@ $(document).ready(function (){
             })
             request.done(function(data){
                 console.log(data);
+                if(data.ris == "OK"){
+                    window.location = '../index.html';
+                }
             });
             request.fail(function(err){
                 console.log(err.message);

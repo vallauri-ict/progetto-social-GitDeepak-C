@@ -39,9 +39,10 @@ $(document).ready(function () {
 	socket.on('disconnect', function(){
 		//alert("Sei stato disconnesso!");
 		let d = new Date();
-		visualizza(username, JSON.stringify("Sei stato disconnesso!", d));	
-		$("#btnInvia").attr("enabled", true);
-		$("#btnDisconnetti").attr("ensabled", true);
+		//visualizza(username, JSON.stringify("Sei stato disconnesso!", d));	
+		$("#btnInvia").attr("enabled", false);
+		$("#btnDisconnetti").attr("enabled", false);
+		window.location = "../index.html";
 	});
 	
 

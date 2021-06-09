@@ -25,12 +25,13 @@ $(document).ready(function (){
             _img.css({"width": "100%", "height": "100%"}).appendTo(_postImg);
             _postImg.addClass("imgPost").appendTo(_post);
             $('<i class="fa fa-heart-o" title="Like"></i>').attr("user", item["idUtente"]).appendTo(_postIcon).on("click", mettiLike);
+            $('<span title="nLike"></span>').html(item["nLike"]).appendTo(_postIcon);
             $('<i class="fa fa-commenting" title="Comment"></i>').attr("user", item["idUtente"]).appendTo(_postIcon).on("click", commenta);
             $('<i class="fa fa-share" title="Share"></i>').appendTo(_postIcon);
             $('<i class="fa fa-bookmark" title="Save Post"></i>').css({"float": "right", "margin-right": "1em", "margin-top": "0.1em"}).appendTo(_postIcon);
             _postIcon.addClass("iconPost").appendTo(_post);
             let lbl = $('<label class="lblComment" for="comment"></label>');
-            $('<input type="text" class="form-control" id="comment" placeholder="Enter comment...">').appendTo(lbl);
+            $('<p id="comment">').html(item["description"]).appendTo(lbl);
             lbl.appendTo(_post);
         }
     });
