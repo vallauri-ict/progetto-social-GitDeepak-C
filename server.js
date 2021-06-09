@@ -1,7 +1,7 @@
 "use strict";
 
 const DBNAME = "DbProgetto";
-const https = require("https");
+const http = require("http");
 const fs = require("fs");
 const express = require("express");
 const { response } = require('express');
@@ -37,7 +37,7 @@ let paginaErrore,
     oldMessages = [],
     newMessages = [];
 
-const server = https.createServer(credentials, app);
+const server = http.createServer(app);
 const io = require('socket.io')(server);
 const TRANSPORTER = nodemailer.createTransport({
     service: 'gmail',
@@ -470,7 +470,7 @@ function createToken(data) {
 
 function writeCookie(res, token) {
     //set() --> metodo di express che consente di impostare una o più intestazioni nella risposta HTTPs
-    res.set("Set-Cookie", `token=${token};max-age=${TTL_Token};path=/;httpsonly=true;secure=true`);
+    res.set("Set-Cookie", `token=${token};max-age=${TTL_Token};path=/;httponly=true;`);
 }
 
 /**************************************** API DI RISPOSTA ALLE RICHIESTE (DA FARE IN CODA A TUTTE LE ALTRE) ****************************************/
